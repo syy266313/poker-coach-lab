@@ -315,6 +315,8 @@ const gameState = {
 	bigBlind: INITIAL_BIG_BLIND,
 	lastRaise: INITIAL_BIG_BLIND,
 	handContext: createHandContextState(),
+	// Local learning trace consumed by js/coach.js; never sent to a server.
+	actionHistory: [],
 };
 
 gameState.toJSON = function () {
@@ -465,6 +467,7 @@ function createGameStateSnapshot() {
 		bigBlind: gameState.bigBlind,
 		lastRaise: gameState.lastRaise,
 		handContext: clonePlainValue(gameState.handContext, createHandContextState()),
+		actionHistory: gameState.actionHistory.slice(-120),
 	};
 }
 
@@ -753,6 +756,9 @@ function restoreGameState(savedGameState) {
 			...createHandContextState(),
 			...clonePlainValue(savedGameState.handContext, {}),
 		},
+		actionHistory: Array.isArray(savedGameState.actionHistory)
+			? savedGameState.actionHistory.slice(-120)
+			: [],
 	});
 }
 
@@ -2714,6 +2720,20 @@ Turn Handling And Betting Round Flow
 
 function notifyPlayerAction(player, action = "", amount = 0, actionMeta = {}) {
 	recordPlayerActionStats(gameState, player, action, actionMeta);
+	if (!player.isBot && action) {
+		const callCost = Math.max(0, gameState.currentBet - player.roundBet);
+		gameState.actionHistory.push({
+			phase: getCurrentPhase(gameState.currentPhaseIndex),
+			action,
+			amount,
+			needToCall: callCost,
+			potOdds: callCost / Math.max(1, gameState.pot + callCost),
+			board: gameState.communityCards.slice(),
+			isHuman: true,
+			handId: gameState.handId,
+		});
+		if (gameState.actionHistory.length > 120) gameState.actionHistory.shift();
+	}
 
 	const msg = getPlayerActionNotificationText(player.name, action, amount);
 	if (action) {
@@ -3481,6 +3501,9 @@ globalThis.poker = {
 	},
 	get handInProgress() {
 		return gameState.handInProgress;
+	},
+	get state() {
+		return gameState;
 	},
 	get reveals() {
 		return gameState.allPlayers.map((player) => ({

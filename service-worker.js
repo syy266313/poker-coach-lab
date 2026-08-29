@@ -45,6 +45,7 @@ const CORE_ASSETS = [
 	"./hole-cards.html",
 	"./remoteTable.html",
 	"./js/app.js",
+	"./js/coach.js",
 	"./js/gameEngine.js",
 	"./js/remoteTable.js",
 	"./js/singleView.js",
