@@ -1,0 +1,20 @@
+{
+    "short_name": "Poker",
+    "name": "Poker",
+    "icons": [
+        {
+            "src": "icons/poker-chip.svg",
+            "type": "image/svg+xml",
+            "sizes": "any"
+        },
+        {
+            "src": "icons/180x180.png",
+            "type": "image/png",
+            "sizes": "180x180"
+        }
+    ],
+    "start_url": "index.html",
+    "background_color": "#2e426b",
+    "display": "standalone",
+    "theme_color": "#2e426b"
+}

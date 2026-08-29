@@ -1,0 +1,437 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no'>
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-title" content="Poker">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="theme-color" content="#2e426b" />
+
+	<!-- SEO -->
+	<meta property="og:description"
+		content="Play Texas Hold'em solo against bots or with friends. Join via QR code or link to see your cards privately on your own phone while the shared table runs the game.">
+	<link rel="canonical" href="https://tehes.github.io/poker/">
+	<meta name="author" content="Tino Sabetta">
+
+	<!-- Open Graph -->
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="Digital Poker Table">
+	<meta property="og:description"
+		content="Play Texas Hold'em solo against bots or with friends. Players can join private views via QR code or link while the shared table runs the game.">
+	<meta property="og:url" content="https://tehes.github.io/poker/">
+	<meta property="og:image" content="https://tehes.github.io/poker/img/og.png">
+
+	<title>Poker</title>
+
+	<link rel="apple-touch-icon" href="icons/180x180.png" />
+	<link rel="icon" href="icons/favicon.png" type="image/png" sizes="32x32">
+	<link rel="icon" href="icons/poker-chip.svg" type="image/svg+xml">
+	<link rel="manifest" href="manifest.json">
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Secular+One&display=swap" rel="stylesheet">
+
+	<script defer src="https://cloud.umami.is/script.js" data-website-id="2392a451-203c-4d8a-a4f5-bd7d06f832af"
+		data-domains="tehes.github.io">
+		</script>
+</head>
+
+<body>
+	<main>
+		<div class="seat" data-rotation="0">
+			<div class="hole-cards">
+				<img class="card" src="cards/1B.svg">
+				<img class="card" src="cards/1B.svg">
+				<div class="qr hidden">
+					<a class="qr-link" target="_blank" rel="noopener noreferrer" title="Open player view"></a>
+					<a class="remote-table-link hidden" target="_blank" rel="noopener noreferrer"
+						title="Open remote table">join via Link</a>
+				</div>
+				<img class="rotate" src="icons/rotate.svg">
+				<img class="blind-icons hidden dealer" src="icons/dealer.svg">
+				<img class="blind-icons hidden small-blind" src="icons/small-blind.svg">
+				<img class="blind-icons hidden big-blind" src="icons/big-blind.svg">
+				<img class="close" src="icons/close.svg">
+				<div class="winner-reaction hidden"></div>
+				<div class="pill win-probability hidden"></div>
+				<div class="pill hand-strength hidden"></div>
+			</div>
+			<h3 contenteditable="true"></h3>
+			<div class="chips">
+				<div class="stack-visual">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 0;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 1;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 2;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 3;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 4;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 5;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 6;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 7;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 8;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 9;">
+				</div>
+				<div class="stack-values">
+					<div class="total">2000</div>
+					<div class="bet">0</div>
+				</div>
+			</div>
+		</div>
+		<div class="seat" data-rotation="0">
+			<div class="hole-cards">
+				<img class="card" src="cards/1B.svg">
+				<img class="card" src="cards/1B.svg">
+				<div class="qr hidden">
+					<a class="qr-link" target="_blank" rel="noopener noreferrer" title="Open player view"></a>
+					<a class="remote-table-link hidden" target="_blank" rel="noopener noreferrer"
+						title="Open remote table">join via Link</a>
+				</div>
+				<img class="rotate" src="icons/rotate.svg">
+				<img class="blind-icons hidden dealer" src="icons/dealer.svg">
+				<img class="blind-icons hidden small-blind" src="icons/small-blind.svg">
+				<img class="blind-icons hidden big-blind" src="icons/big-blind.svg">
+				<img class="close" src="icons/close.svg">
+				<div class="winner-reaction hidden"></div>
+				<div class="pill win-probability hidden"></div>
+				<div class="pill hand-strength hidden"></div>
+			</div>
+			<h3 contenteditable="true"></h3>
+			<div class="chips">
+				<div class="stack-visual">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 0;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 1;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 2;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 3;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 4;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 5;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 6;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 7;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 8;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 9;">
+				</div>
+				<div class="stack-values">
+					<div class="total">2000</div>
+					<div class="bet">0</div>
+				</div>
+			</div>
+		</div>
+		<div class="seat" data-rotation="0">
+			<div class="hole-cards">
+				<img class="card" src="cards/1B.svg">
+				<img class="card" src="cards/1B.svg">
+				<div class="qr hidden">
+					<a class="qr-link" target="_blank" rel="noopener noreferrer" title="Open player view"></a>
+					<a class="remote-table-link hidden" target="_blank" rel="noopener noreferrer"
+						title="Open remote table">join via Link</a>
+				</div>
+				<img class="rotate" src="icons/rotate.svg">
+				<img class="blind-icons hidden dealer" src="icons/dealer.svg">
+				<img class="blind-icons hidden small-blind" src="icons/small-blind.svg">
+				<img class="blind-icons hidden big-blind" src="icons/big-blind.svg">
+				<img class="close" src="icons/close.svg">
+				<div class="winner-reaction hidden"></div>
+				<div class="pill win-probability hidden"></div>
+				<div class="pill hand-strength hidden"></div>
+			</div>
+			<h3 contenteditable="true"></h3>
+			<div class="chips">
+				<div class="stack-visual">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 0;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 1;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 2;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 3;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 4;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 5;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 6;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 7;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 8;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 9;">
+				</div>
+				<div class="stack-values">
+					<div class="total">2000</div>
+					<div class="bet">0</div>
+				</div>
+			</div>
+		</div>
+		<div class="seat" data-rotation="0">
+			<div class="hole-cards">
+				<img class="card" src="cards/1B.svg">
+				<img class="card" src="cards/1B.svg">
+				<div class="qr hidden">
+					<a class="qr-link" target="_blank" rel="noopener noreferrer" title="Open player view"></a>
+					<a class="remote-table-link hidden" target="_blank" rel="noopener noreferrer"
+						title="Open remote table">join via Link</a>
+				</div>
+				<img class="rotate" src="icons/rotate.svg">
+				<img class="blind-icons hidden dealer" src="icons/dealer.svg">
+				<img class="blind-icons hidden small-blind" src="icons/small-blind.svg">
+				<img class="blind-icons hidden big-blind" src="icons/big-blind.svg">
+				<img class="close" src="icons/close.svg">
+				<div class="winner-reaction hidden"></div>
+				<div class="pill win-probability hidden"></div>
+				<div class="pill hand-strength hidden"></div>
+			</div>
+			<h3 contenteditable="true"></h3>
+			<div class="chips">
+				<div class="stack-visual">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 0;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 1;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 2;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 3;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 4;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 5;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 6;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 7;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 8;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 9;">
+				</div>
+				<div class="stack-values">
+					<div class="total">2000</div>
+					<div class="bet">0</div>
+				</div>
+			</div>
+		</div>
+		<div class="seat" data-rotation="0">
+			<div class="hole-cards">
+				<img class="card" src="cards/1B.svg">
+				<img class="card" src="cards/1B.svg">
+				<div class="qr hidden">
+					<a class="qr-link" target="_blank" rel="noopener noreferrer" title="Open player view"></a>
+					<a class="remote-table-link hidden" target="_blank" rel="noopener noreferrer"
+						title="Open remote table">join via Link</a>
+				</div>
+				<img class="rotate" src="icons/rotate.svg">
+				<img class="blind-icons hidden dealer" src="icons/dealer.svg">
+				<img class="blind-icons hidden small-blind" src="icons/small-blind.svg">
+				<img class="blind-icons hidden big-blind" src="icons/big-blind.svg">
+				<img class="close" src="icons/close.svg">
+				<div class="winner-reaction hidden"></div>
+				<div class="pill win-probability hidden"></div>
+				<div class="pill hand-strength hidden"></div>
+			</div>
+			<h3 contenteditable="true"></h3>
+			<div class="chips">
+				<div class="stack-visual">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 0;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 1;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 2;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 3;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 4;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 5;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 6;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 7;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 8;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 9;">
+				</div>
+				<div class="stack-values">
+					<div class="total">2000</div>
+					<div class="bet">0</div>
+				</div>
+			</div>
+		</div>
+		<div class="seat" data-rotation="0">
+			<div class="hole-cards">
+				<img class="card" src="cards/1B.svg">
+				<img class="card" src="cards/1B.svg">
+				<div class="qr hidden">
+					<a class="qr-link" target="_blank" rel="noopener noreferrer" title="Open player view"></a>
+					<a class="remote-table-link hidden" target="_blank" rel="noopener noreferrer"
+						title="Open remote table">join via Link</a>
+				</div>
+				<img class="rotate" src="icons/rotate.svg">
+				<img class="blind-icons hidden dealer" src="icons/dealer.svg">
+				<img class="blind-icons hidden small-blind" src="icons/small-blind.svg">
+				<img class="blind-icons hidden big-blind" src="icons/big-blind.svg">
+				<img class="close" src="icons/close.svg">
+				<div class="winner-reaction hidden"></div>
+				<div class="pill win-probability hidden"></div>
+				<div class="pill hand-strength hidden"></div>
+			</div>
+			<h3 contenteditable="true"></h3>
+			<div class="chips">
+				<div class="stack-visual">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 0;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 1;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 2;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 3;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 4;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 5;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 6;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 7;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 8;">
+					<img src="icons/chip.svg" alt="" style="--stack-index: 9;">
+				</div>
+				<div class="stack-values">
+					<div class="total">2000</div>
+					<div class="bet">0</div>
+				</div>
+			</div>
+		</div>
+		<div id="table-middle">
+			<section class="infos">
+				<div id="pot">0</div>
+				<div id="notification">Enter player names – leave fields empty to add bots – then click
+					“Start”.
+				</div>
+			</section>
+			<section id="community-cards">
+				<!-- Suits: Diamonds, Hearts, Clubs, Spades -->
+				<div class="cardslot"><!-- <img src="cards/3D.svg"> --></div>
+				<div class="cardslot"><!-- <img src="cards/AS.svg"> --></div>
+				<div class="cardslot"><!-- <img src="cards/7H.svg"> --></div>
+				<div class="cardslot"></div>
+				<div class="cardslot"></div>
+			</section>
+			<section class="actions">
+				<div id="new-round-controls" class="new-round-controls">
+					<button type="button" id="start-button" name="button"><span
+							id="start-button-label">Start</span><span id="new-round-countdown" class="hidden"> in <span
+								id="new-round-countdown-value">20</span></span></button>
+					<button type="button" id="new-round-cancel-button" class="hidden" name="button">X</button>
+				</div>
+				<button type="button" id="instructions-button" name="button">Instructions</button>
+				<button type="button" id="stats-button" class="hidden" name="button">Stats</button>
+				<button type="button" id="log-button" class="hidden" name="button">Log</button>
+				<button type="button" id="fast-forward-button" class="hidden" name="button">Fast Forward</button>
+				<button type="button" id="fold-button" class="hidden" name="button">Fold</button>
+				<button type="button" id="action-button" class="hidden" name="button">Check</button>
+				<div id="amount-controls" class="amount-controls hidden">
+					<button type="button" id="amount-decrement-button" class="amount-step-button"
+						name="button">-</button>
+					<input type="range" id="amount-slider" name="amount" value="0" min="0" max="2000" step="10">
+					<output>0</output>
+					<button type="button" id="amount-increment-button" class="amount-step-button"
+						name="button">+</button>
+				</div>
+			</section>
+		</div>
+	</main>
+	<footer>
+		<div id="credit">
+			<a href="https://github.com/Tehes">made by Tehes</a>
+			<button type="button" id="version-button" class="version-button">Version</button>
+			<button type="button" id="sound-button" class="sound-toggle">Sound on</button>
+		</div>
+		<div id="social">
+			<a href="https://github.com/Tehes/poker"><img alt="Github-Logo" src="social/github.svg" width="25"
+					height="25"></a>
+			<a href="https://www.threads.net/@tehes83"><img alt="Threads-Logo" src="social/threads.svg" width="25"
+					height="25"></a>
+		</div>
+	</footer>
+	<div id="overlay-backdrop" class="hidden"></div>
+	<section id="resume-game-overlay" class="overlay-panel resume-panel hidden">
+		<div class="resume-content">
+			<h2>Continue saved game?</h2>
+			<p>A saved poker game was found on this device. Continue it or start a fresh game.</p>
+		</div>
+		<div class="resume-actions">
+			<button type="button" id="resume-continue-button" name="button">Continue Game</button>
+			<button type="button" id="resume-new-button" name="button">New Game</button>
+		</div>
+	</section>
+	<section id="stats-overlay" class="overlay-panel hidden">
+		<div class="stats-table-wrap">
+			<table id="stats-table">
+				<thead>
+					<tr>
+						<th>Player</th>
+						<th>Stack</th>
+						<th>Hands</th>
+						<th>Won</th>
+						<th>Win %</th>
+						<th>Showdowns</th>
+						<th>SD Won</th>
+						<th>SD %</th>
+						<th>Folds</th>
+						<th>Pre</th>
+						<th>Post</th>
+						<th>All-ins</th>
+					</tr>
+				</thead>
+				<tbody id="stats-table-body"></tbody>
+			</table>
+		</div>
+		<button type="button" id="stats-close-button" class="overlay-close">Close</button>
+	</section>
+	<section id="log-overlay" class="overlay-panel log-panel hidden">
+		<div class="log-list-wrap">
+			<div id="log-list"></div>
+		</div>
+		<button type="button" id="log-close-button" class="overlay-close">Close</button>
+	</section>
+	<section id="version-overlay" class="overlay-panel version-panel hidden">
+		<div class="version-list-wrap">
+			<div class="version-panel-header">
+				<h2>Version History</h2>
+			</div>
+			<div id="version-list"></div>
+		</div>
+		<button type="button" id="version-close-button" class="overlay-close">Close</button>
+	</section>
+	<section id="instructions-overlay" class="overlay-panel instructions-panel hidden">
+		<div class="instructions-content">
+			<h2>How this table works</h2>
+			<p>The play mode is chosen automatically when you press “Start”, depending on how many human players are
+				seated.</p>
+
+			<h3>Choose your setup</h3>
+			<div class="instructions-modes">
+				<article class="instructions-mode-card">
+					<h4>Group Play (2+ humans)</h4>
+					<p>Each human enters a name. After the hand starts, every human seat shows a QR code for the
+						private hole-card view and a direct link to the remote table view.</p>
+					<p>Actions can still happen on the shared table, or from the linked device when that seat is
+						active.</p>
+					<p class="instructions-note">Empty seats are automatically filled by bots, so mixed human/bot tables
+						work without any setup.</p>
+				</article>
+				<article class="instructions-mode-card">
+					<h4>Solo vs Bots (1 human)</h4>
+					<p>One human plays directly on the main device. No QR scan is required and that player’s hole cards
+						remain visible on the table.</p>
+				</article>
+				<article class="instructions-mode-card">
+					<h4>Spectator / TV Poker (0 humans)</h4>
+					<p>All seats are filled by bots. The table runs automatically and all hole cards remain visible.</p>
+				</article>
+			</div>
+
+			<h3>Before you start</h3>
+			<ul class="instructions-list">
+				<li>Enter player names in the name badges.</li>
+				<li>Leave a seat empty if you want it filled by a bot.</li>
+				<li>Use the close icon to remove seats you do not need.</li>
+				<li>Use the rotate icon to orient a seat toward the player sitting there. This is especially useful on
+					tablets.</li>
+				<li>You need at least 2 active seats before the game can start.</li>
+			</ul>
+
+			<h3>During a hand</h3>
+			<ul class="instructions-list">
+				<li>Dealer and blinds are assigned automatically, and the blind level increases over time.</li>
+				<li>The table uses standard poker action labels: Fold, Check, Call, Raise, All-in.</li>
+				<li>Slider guide: 0 = Check, matching the current bet = Call, above that = Raise, maximum = All-in.</li>
+				<li>Raises that are too small turn red while dragging and snap to the minimum legal raise when released.
+				</li>
+			</ul>
+
+			<h3>Read the table</h3>
+			<ul class="instructions-list">
+				<li>The pot is shown in the center. Community cards are in the middle, and each seat displays its stack
+					and current round bet.</li>
+				<li>Dealer, small blind, and big blind icons indicate the current positions.</li>
+				<li>The notification bar is clickable and opens the hand log.</li>
+				<li>Stats and Log become available after completed hands.</li>
+				<li>Win percentages and short hand labels only appear when hole cards are visible on the shared table,
+					such as in spectator mode or during all-in runouts.</li>
+			</ul>
+		</div>
+		<button type="button" id="instructions-close-button" class="overlay-close">Close</button>
+	</section>
+	<script type="module" src="./js/app.js"></script>
+</body>
+
+</html>
