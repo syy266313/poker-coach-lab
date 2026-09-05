@@ -1273,3 +1273,223 @@ MEDIA QUERIES
 .coach-empty { padding:28px 8px 16px; text-align:center; }.coach-empty span { color:#f5c75e; font-size:2.8rem; }.coach-empty h3 { margin:8px 0; }.coach-empty p { color:#aeb8cb; font: .84rem/1.5 system-ui,sans-serif; }
 .coach-attribution { margin-top:16px; color:#748199; font: .68rem system-ui,sans-serif; }.coach-attribution a { color:#f5c75e; }
 @media (max-width:600px) { #coach-panel { top:auto; bottom:10px; right:10px; width:calc(100vw - 20px); max-height:72dvh; } #coach-toggle { font-size:.82rem; padding:1.5vmin 2vmin; } }
+
+/* ============================================================================
+   FELTWISE VISUAL SYSTEM v2 — compact premium poker table
+   ============================================================================ */
+:root {
+    --blue: #101a31;
+    --blue-darker: #091024;
+    --blue-lighter: #253452;
+    --blue-lightest: #a8b5cb;
+    --font-color: #f7f5ee;
+    --yellow: #e8b957;
+    --yellow-active: #f2cc72;
+    --felt: #0c5549;
+    --felt-deep: #073c36;
+    --line: rgba(255,255,255,.13);
+    --shadow: 0 12px 32px rgba(0,0,0,.28);
+}
+html { background: #091024; }
+body {
+    background: radial-gradient(ellipse at 50% 44%, rgba(29,56,78,.65), transparent 56%),
+        linear-gradient(145deg, #0b1329 0%, #111e3b 52%, #080f22 100%);
+    font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", sans-serif;
+    letter-spacing: .01em;
+}
+body::before {
+    content: ""; position: fixed; inset: 0; pointer-events: none; opacity: .17;
+    background-image: radial-gradient(rgba(255,255,255,.8) .5px, transparent .5px);
+    background-size: 5px 5px; mix-blend-mode: soft-light;
+}
+main {
+    position: relative; width: min(1240px, 100vw); margin: 0 auto; padding: clamp(18px,3vw,38px) clamp(12px,3vw,42px);
+    grid-template-columns: minmax(120px, 1fr) minmax(360px, 1.65fr) minmax(120px, 1fr);
+    grid-template-rows: minmax(170px, 1fr) auto minmax(170px, 1fr);
+    gap: clamp(12px,2vw,26px); isolation: isolate;
+}
+main::before {
+    content: ""; position: absolute; z-index: -1; left: 50%; top: 50%; width: 82%; height: 46%; transform: translate(-50%,-50%);
+    border-radius: 50%; background: radial-gradient(ellipse at 50% 35%, #126354, var(--felt) 58%, var(--felt-deep));
+    border: 10px solid #392b25; box-shadow: inset 0 0 0 2px rgba(226,190,108,.45), 0 18px 55px rgba(0,0,0,.38);
+}
+#table-middle {
+    z-index: 1; width: 100%; padding: clamp(14px,2vw,24px); gap: clamp(14px,2vw,24px);
+    border: 1px solid rgba(255,255,255,.13); border-radius: 24px;
+    background: linear-gradient(145deg, rgba(7,31,40,.5), rgba(4,28,34,.26)); backdrop-filter: blur(8px);
+}
+.seat { z-index: 2; align-self: center; justify-self: center; }
+main .seat { width: clamp(128px, 16vw, 196px); min-width: 0; }
+.hole-cards img { width: clamp(47px, 5.5vw, 70px); min-width: 0 !important; margin: 3px; filter: drop-shadow(0 7px 7px rgba(0,0,0,.3)); }
+.hole-cards img:nth-of-type(2) { right: 0; }
+.seat h3 {
+    margin: 6px 0 8px; padding: 8px 10px; min-height: 34px; display: flex; align-items: center; justify-content: center;
+    border: 1px solid rgba(255,255,255,.16); border-radius: 12px; background: rgba(15,28,54,.88); color: #eef2f8;
+    box-shadow: 0 5px 15px rgba(0,0,0,.18); font-size: clamp(.72rem,1.25vw,.95rem); font-weight: 650;
+}
+.seat h3:empty::before { content: "输入名字"; color: #8794ab; }
+.active h3 { border-color: var(--yellow); background: linear-gradient(135deg,#f1ca6a,#c98d2f); color:#121b32; box-shadow: 0 0 0 3px rgba(232,185,87,.16), 0 8px 22px rgba(232,185,87,.18); }
+.folded h3 { background: rgba(5,13,29,.55); color: #68758d; }
+.chips { display: flex; align-items: center; justify-content: center; gap: 10px; }
+.seat .chips .stack-visual { opacity: .9; transform: scale(.72); transform-origin: right center; margin-right: -12px; }
+.chips :where(.total,.bet) { font-size: clamp(.75rem,1.3vw,1rem); }
+.chips .total { color: #eef2f8; font-weight: 700; }
+.chips .bet { color: var(--yellow); font-weight: 650; }
+.infos { width: 100%; gap: 8px; align-items: stretch; }
+.infos div { min-width: 76px; padding: 9px 13px; border: 1px solid var(--line); background: rgba(4,19,35,.58); box-shadow: none; }
+#pot { color: var(--yellow); font-size: 1.15rem; font-weight: 750; }
+#notification { color: #c4cedd; font-size: .78rem; }
+#community-cards { gap: clamp(5px,1vw,10px); }
+.cardslot { width: clamp(47px,6vw,72px); border-radius: 9px; box-shadow: 0 8px 18px rgba(0,0,0,.23); }
+.cardslot:empty { border: 1px dashed rgba(238,221,170,.32); background: rgba(3,20,27,.22); box-shadow: none; }
+.actions { gap: 8px; }
+.actions button { width: auto; min-width: 74px; margin: 0; padding: 10px 15px; border-radius: 11px; border: 1px solid rgba(255,255,255,.1); background: rgba(245,198,93,.96); box-shadow: 0 6px 15px rgba(0,0,0,.2); font-size: .85rem; font-weight: 700; }
+.actions button:hover { background: #f5d27f; transform: translateY(-1px); }
+#fold-button { background: rgba(255,255,255,.1); color: #edf1f7; border-color: rgba(255,255,255,.2); }
+.amount-controls { flex-basis: 100%; margin: 4px 0 0; padding: 8px 10px; border-radius: 14px; background: rgba(3,18,31,.55); }
+input[type=range] { height: 12px; margin: 8px 0; background: rgba(255,255,255,.18); box-shadow: none; }
+input[type=range]::-webkit-slider-thumb { width: 28px; height: 28px; }
+output { width: 68px; padding: 6px 8px; background: rgba(255,255,255,.1); box-shadow: none; }
+footer { max-width: 1240px; margin: 0 auto; padding: 10px clamp(16px,3vw,42px) 18px; color: #8190a9; }
+footer a { color: #9ba9be; }
+.version-button,.sound-toggle { border-color: rgba(255,255,255,.22); color: #9ba9be; }
+
+@media (max-width: 700px) {
+    main { width: 100%; padding: 13px 8px 20px; grid-template-columns: repeat(3, minmax(0,1fr)); grid-template-rows: 145px auto 145px; gap: 12px 5px; }
+    main::before { width: 125%; height: 40%; border-width: 7px; }
+    main .seat { width: 31vw; max-width: 125px; }
+    .hole-cards img { width: clamp(38px,10vw,47px); }
+    .seat h3 { min-height: 27px; margin: 4px 0; padding: 5px 3px; border-radius: 9px; font-size: .68rem; }
+    .seat .chips { gap: 3px; }
+    .seat .chips .stack-visual { display: none; }
+    .chips :where(.total,.bet) { min-width: 0; font-size: .67rem; }
+    #table-middle { grid-column: 1 / 4; padding: 12px 8px; border-radius: 18px; gap: 12px; }
+    .infos { gap: 5px; }
+    .infos div { min-width: 0; padding: 7px 6px; border-radius: 10px; }
+    #pot { font-size: .9rem; }
+    #notification { font-size: .64rem; padding: 7px 5px !important; }
+    #community-cards { gap: 4px; }
+    .cardslot { width: 14vw; max-width: 52px; border-radius: 6px; }
+    .actions { gap: 6px; }
+    .actions button { min-width: 61px; padding: 8px 8px; font-size: .72rem; }
+    #start-button,#instructions-button,#fast-forward-button { font-size: .7rem; }
+    footer { justify-content: center; padding-bottom: 10px; font-size: .7rem; }
+}
+
+/* v2.1 mobile composition fix: keep the whole table inside the viewport */
+html, body { overflow-x: hidden; }
+@media (max-width: 700px) {
+    main {
+        width: 100%; min-height: 0; height: auto; flex: 0 0 auto; overflow: hidden;
+        padding: 14px 8px 16px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        grid-template-rows: 132px 235px 132px;
+        gap: 8px 4px;
+    }
+    main::before {
+        width: 112%; height: 330px; top: 50%; left: 50%;
+        border-width: 7px; transform: translate(-50%, -50%);
+    }
+    main .seat { width: min(30vw, 118px); height: 122px; align-self: center; }
+    .hole-cards { height: 54px; }
+    .hole-cards img { width: 42px; height: 59px; min-width: 0 !important; margin: 0; }
+    .hole-cards img:nth-of-type(1) { left: 3px; }
+    .hole-cards img:nth-of-type(2) { right: 3px; }
+    .seat h3 { height: 29px; min-height: 29px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+    .seat .chips { height: 30px; }
+    .chips :where(.total,.bet) { line-height: 1.25; }
+    #table-middle { min-height: 0; height: 235px; align-self: center; overflow: hidden; padding: 13px 8px; }
+    #table-middle .infos { flex: 0 0 35px; }
+    #table-middle #community-cards { flex: 0 0 60px; }
+    #table-middle .actions { flex: 0 0 auto; }
+    footer { flex: 0 0 auto; min-height: 44px; }
+}
+
+/* v2.2: card-only sizing — utility icons must not inherit card dimensions */
+.hole-cards img.card { width: clamp(47px, 5.5vw, 70px); height: auto; min-width: 0 !important; margin: 3px; }
+.hole-cards > img.close,
+.hole-cards > img.rotate,
+.hole-cards > img.blind-icons { width: auto !important; height: auto !important; min-width: 0 !important; margin: 0; }
+.hole-cards > img.close { width: 29px !important; height: 29px !important; top: -7px; right: -7px; }
+.hole-cards > img.rotate { width: 22px !important; height: 22px !important; }
+.hole-cards > img.blind-icons { width: 20px !important; height: 20px !important; }
+@media (max-width: 700px) {
+    .hole-cards img.card { width: 42px; height: auto; margin: 0; }
+    .hole-cards > img.close { width: 25px !important; height: 25px !important; top: -5px; right: -5px; }
+    .hole-cards > img.rotate { width: 18px !important; height: 18px !important; }
+    .hole-cards > img.blind-icons { width: 17px !important; height: 17px !important; }
+}
+
+/* icon correction with stronger specificity than mobile card rules */
+main .seat .hole-cards > img.close { width: 25px !important; height: 25px !important; min-width: 25px !important; top: -4px; right: -4px; }
+main .seat .hole-cards > img.rotate { width: 18px !important; height: 18px !important; min-width: 18px !important; }
+main .seat .hole-cards > img.blind-icons { width: 17px !important; height: 17px !important; min-width: 17px !important; }
+
+/* ============================================================================
+   FELTWISE v3 — actual table composition, not a stretched grid
+   ============================================================================ */
+body::after { content:"FELTWISE  /  POKER TRAINER"; position:fixed; top:16px; left:24px; z-index:3; color:rgba(255,255,255,.5); font:700 .68rem/1 -apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif; letter-spacing:.22em; pointer-events:none; }
+main { position:relative; display:block; width:100%; height:calc(100dvh - 62px); min-height:560px; max-width:1280px; margin:0 auto; padding:0; overflow:hidden; }
+main::before { width:88%; height:48%; top:51%; left:50%; border-width:10px; }
+main::after { content:""; position:absolute; z-index:-1; left:50%; top:51%; width:78%; height:38%; transform:translate(-50%,-50%); border-radius:50%; border:1px solid rgba(255,255,255,.1); box-shadow:inset 0 0 70px rgba(0,0,0,.18); pointer-events:none; }
+main > .seat { position:absolute; z-index:2; width:clamp(140px,15vw,190px); min-width:0; height:auto; align-self:initial; justify-self:initial; }
+main > .seat:nth-of-type(1) { top:5%; left:4%; }
+main > .seat:nth-of-type(2) { top:2%; left:50%; transform:translateX(-50%); }
+main > .seat:nth-of-type(3) { top:5%; right:4%; }
+main > .seat:nth-of-type(4) { bottom:5%; left:4%; }
+main > .seat:nth-of-type(5) { bottom:2%; left:50%; transform:translateX(-50%); }
+main > .seat:nth-of-type(6) { bottom:5%; right:4%; }
+main > .seat[data-rotation="90"] { transform:rotate(90deg); }
+main > .seat[data-rotation="180"] { transform:rotate(180deg); }
+main > .seat[data-rotation="270"] { transform:rotate(270deg); }
+main > .seat:nth-of-type(2)[data-rotation="0"],main > .seat:nth-of-type(5)[data-rotation="0"] { transform:translateX(-50%); }
+main > .seat .hole-cards { height:clamp(72px,8vw,96px); }
+main > .seat .hole-cards img.card { width:clamp(49px,5.2vw,66px); height:auto; }
+main > .seat h3 { font-size:clamp(.72rem,1vw,.9rem); margin:7px 0; }
+main > .seat .chips { justify-content:center; }
+main > .seat .chips .stack-visual { transform:scale(.62); margin-right:-22px; }
+#table-middle { position:absolute; z-index:1; top:30%; left:6%; width:88%; height:42%; padding:clamp(14px,2vw,24px); border-radius:24px; gap:clamp(14px,2vw,22px); }
+#table-middle .infos { flex:0 0 auto; }
+#community-cards { flex:0 0 auto; }
+#table-middle .actions { flex:0 0 auto; }
+#table-middle .cardslot { width:clamp(46px,5.8vw,68px); }
+footer { position:relative; z-index:4; height:62px; flex:0 0 62px; }
+
+@media (max-width:700px) {
+  body::after { top:10px; left:15px; font-size:.56rem; letter-spacing:.16em; }
+  main { height:calc(100dvh - 48px); min-height:0; }
+  main::before { width:122%; height:48%; top:51%; border-width:7px; }
+  main::after { width:106%; height:39%; top:51%; }
+  main > .seat { width:31vw; max-width:122px; height:108px; }
+  main > .seat:nth-of-type(1) { top:5%; left:2%; }
+  main > .seat:nth-of-type(2) { top:3%; left:50%; }
+  main > .seat:nth-of-type(3) { top:5%; right:2%; }
+  main > .seat:nth-of-type(4) { bottom:5%; left:2%; }
+  main > .seat:nth-of-type(5) { bottom:3%; left:50%; }
+  main > .seat:nth-of-type(6) { bottom:5%; right:2%; }
+  main > .seat .hole-cards { height:57px; }
+  main > .seat .hole-cards img.card { width:39px; height:auto; }
+  main > .seat h3 { height:27px; min-height:27px; margin:3px 0; padding:4px 3px; font-size:.64rem; }
+  main > .seat .chips { height:25px; }
+  #table-middle { top:29%; left:4%; width:92%; height:42%; padding:12px 8px; border-radius:20px; gap:13px; }
+  #table-middle .infos div { padding:7px 5px; }
+  #table-middle #community-cards .cardslot { width:13vw; max-width:49px; }
+  footer { height:48px; flex-basis:48px; }
+}
+
+.learnhub-panel { width:min(900px,96vw); max-height:min(88vh,900px); }
+.learnhub-header h2 { margin:0; font-size:1.5rem; }
+.learnhub-header p { margin:.35rem 0 0; color:var(--blue-lightest); font-family:system-ui,sans-serif; }
+.learnhub-tabs { display:flex; gap:.5rem; flex-wrap:wrap; }
+.learnhub-tabs button { width:auto; margin:0; padding:.55rem .9rem; border-radius:999px; background:rgba(255,255,255,.06); color:var(--blue-lightest); box-shadow:none; }
+.learnhub-tabs button.active { background:var(--yellow); color:var(--blue-darker); }
+.learnhub-body { overflow:auto; min-height:0; display:flex; flex-direction:column; gap:1rem; }
+.learnhub-pane { display:flex; flex-direction:column; gap:.8rem; }
+.learn-card { padding:.9rem 1rem; border:1px solid hsla(0,0%,100%,.1); border-radius:14px; background:rgba(255,255,255,.05); }
+.learn-card h3 { margin:0 0 .35rem; font-size:1rem; color:var(--font-color); }
+.learn-card p { margin:0; color:var(--blue-lightest); font-family:system-ui,sans-serif; line-height:1.55; }
+.learn-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); gap:.8rem; }
+.learn-pill { display:inline-flex; gap:.35rem; align-items:center; padding:.25rem .55rem; border-radius:999px; background:rgba(255,255,255,.08); color:var(--font-color); font-size:.78rem; }
+.learn-warn { color:#ffd6cb; background:rgba(212,86,70,.16); }
+.learn-good { color:#cdf4d7; background:rgba(72,166,106,.14); }
+@media (max-width:700px) { .learnhub-panel { width:96vw; max-height:82vh; } .learn-grid { grid-template-columns:1fr; } }

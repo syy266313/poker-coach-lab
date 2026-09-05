@@ -30,7 +30,7 @@
 	<link rel="icon" href="icons/favicon.png" type="image/png" sizes="32x32">
 	<link rel="icon" href="icons/poker-chip.svg" type="image/svg+xml">
 	<link rel="manifest" href="manifest.json">
-	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/style.css?v=feltwise-v6">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Secular+One&display=swap" rel="stylesheet">
@@ -292,7 +292,7 @@
 								id="new-round-countdown-value">20</span></span></button>
 					<button type="button" id="new-round-cancel-button" class="hidden" name="button">X</button>
 				</div>
-				<button type="button" id="instructions-button" name="button">Instructions</button>
+				<button type="button" id="instructions-button" name="button">学习中心</button>
 				<button type="button" id="stats-button" class="hidden" name="button">Stats</button>
 				<button type="button" id="log-button" class="hidden" name="button">Log</button>
 				<button type="button" id="fast-forward-button" class="hidden" name="button">Fast Forward</button>
@@ -316,6 +316,7 @@
 			<button type="button" id="sound-button" class="sound-toggle">Sound on</button>
 		</div>
 		<div id="social">
+			<a href="./advisor.html" style="display:inline-flex;align-items:center;gap:6px;">胜率/策略页</a>
 			<a href="https://github.com/Tehes/poker"><img alt="Github-Logo" src="social/github.svg" width="25"
 					height="25"></a>
 			<a href="https://www.threads.net/@tehes83"><img alt="Threads-Logo" src="social/threads.svg" width="25"
@@ -432,8 +433,24 @@
 		</div>
 		<button type="button" id="instructions-close-button" class="overlay-close">Close</button>
 	</section>
+	<section id="learnhub-overlay" class="overlay-panel learnhub-panel hidden">
+		<div class="learnhub-header">
+			<h2>学习中心</h2>
+			<p>策略建议 · 教学模式 · 复盘回放</p>
+		</div>
+		<div class="learnhub-tabs">
+			<button type="button" data-learnhub-tab="advisor" class="active">策略建议</button>
+			<button type="button" data-learnhub-tab="tutorial">教学模式</button>
+			<button type="button" data-learnhub-tab="replay">复盘回放</button>
+		</div>
+		<div class="learnhub-body">
+			<div class="learnhub-pane" data-learnhub-pane="advisor"></div>
+			<div class="learnhub-pane hidden" data-learnhub-pane="tutorial"></div>
+			<div class="learnhub-pane hidden" data-learnhub-pane="replay"></div>
+		</div>
+		<button type="button" id="learnhub-close-button" class="overlay-close">Close</button>
+	</section>
 	<script type="module" src="./js/app.js"></script>
-	<script type="module" src="./js/coach.js"></script>
 </body>
 
 </html>

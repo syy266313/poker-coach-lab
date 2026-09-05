@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#08101e">
+  <title>我的胜率与策略 · Feltwise</title>
+  <link rel="stylesheet" href="css/advisor.css?v=2">
+</head>
+<body>
+  <div class="app">
+    <header class="topbar">
+      <a class="back" href="./index.html">← 牌桌</a>
+      <div class="titles">
+        <div class="eyebrow">学习中心</div>
+        <h1>我的胜率与策略</h1>
+        <p>单独查看当前牌局胜率、策略建议和复盘</p>
+      </div>
+      <button id="refresh-btn" class="ghost">刷新</button>
+    </header>
+
+    <section class="board card">
+      <div class="board-top">
+        <div class="slot-group" id="community-slots"></div>
+      </div>
+      <div class="board-bottom">
+        <span class="chip" id="pot-chip">底池 0</span>
+        <span class="chip chip-soft" id="phase-chip">等待开始</span>
+      </div>
+    </section>
+
+    <section class="players card">
+      <div class="section-head">
+        <h2>玩家桌面</h2>
+        <span class="hint">当前玩家高亮</span>
+      </div>
+      <div id="player-grid" class="player-grid"></div>
+    </section>
+
+    <section class="actions card">
+      <div class="section-head">
+        <h2>行动建议</h2>
+        <span id="confidence-pill" class="pill">—</span>
+      </div>
+      <div class="action-row" id="action-row"></div>
+    </section>
+
+    <section class="hero card">
+      <div class="hero-left">
+        <div class="label">当前查看玩家</div>
+        <div id="player-name" class="player-name">—</div>
+        <div id="player-meta" class="meta">请先回到牌桌并开始一手牌</div>
+        <div class="mini-stats">
+          <div><span>长期胜率</span><b id="long-winrate">—</b></div>
+          <div><span>当前胜率</span><b id="winrate">—</b></div>
+          <div><span>牌型</span><b id="hand-name">—</b></div>
+          <div><span>建议动作</span><b id="strategy-action">—</b></div>
+        </div>
+      </div>
+      <div class="hero-right">
+        <div class="label">当前胜率</div>
+        <div id="winrate-big" class="big">—</div>
+        <div class="bar"><i id="winbar"></i></div>
+        <div id="equity-text" class="hint">等待局面数据</div>
+      </div>
+    </section>
+
+    <section class="card detail-card">
+      <div class="section-head">
+        <h2>策略解释</h2>
+        <span class="pill muted">实时分析</span>
+      </div>
+      <p id="reason-text" class="detail-text">请先开始一手牌。</p>
+    </section>
+
+    <section class="card detail-card">
+      <div class="section-head">
+        <h2>赔率 / 手牌 / 复盘</h2>
+        <span class="pill muted">最近 8 条</span>
+      </div>
+      <div class="detail-grid">
+        <div class="subcard">
+          <div class="label">赔率 / SPR</div>
+          <div id="odds-text" class="big small">—</div>
+          <div id="board-text" class="hint">—</div>
+        </div>
+        <div class="subcard">
+          <div class="label">最近手牌</div>
+          <div id="hand-text" class="big small">—</div>
+          <div class="hint">当前手牌与公共牌</div>
+        </div>
+      </div>
+      <div id="history-list" class="history"></div>
+    </section>
+
+    <footer class="footer">
+      <span>基于本地快照，不上传数据</span>
+      <a href="./index.html">返回牌桌继续玩</a>
+    </footer>
+  </div>
+  <script type="module" src="./js/advisorPage.js"></script>
+</body>
+</html>

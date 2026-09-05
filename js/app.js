@@ -135,6 +135,10 @@ const versionOverlay = document.querySelector("#version-overlay");
 const versionCloseButton = document.querySelector("#version-close-button");
 const versionList = document.querySelector("#version-list");
 const instructionsOverlay = document.querySelector("#instructions-overlay");
+const learnhubOverlay = document.querySelector("#learnhub-overlay");
+const learnhubCloseButton = document.querySelector("#learnhub-close-button");
+const learnhubTabs = document.querySelectorAll("[data-learnhub-tab]");
+const learnhubPanes = document.querySelectorAll("[data-learnhub-pane]");
 const instructionsCloseButton = document.querySelector(
 	"#instructions-close-button",
 );
@@ -191,6 +195,9 @@ const overlays = {
 	},
 	instructions: {
 		el: instructionsOverlay,
+	},
+	learnhub: {
+		el: learnhubOverlay,
 	},
 };
 
@@ -1462,6 +1469,7 @@ function openOverlay(name) {
 		entry.el?.classList.toggle("hidden", key !== name);
 	});
 	overlay.beforeOpen?.();
+	if (name === "learnhub") renderLearnHubOverlay();
 	syncOverlayBackdrop();
 }
 
@@ -2337,6 +2345,7 @@ function startGame() {
 			startButton.classList.add("hidden");
 			instructionsButton.classList.add("hidden");
 			closeAllOverlays();
+	if (learnhubOverlay) learnhubOverlay.classList.add("hidden");
 			gameState.gameStarted = true;
 			initStateSyncForGame();
 
@@ -2526,6 +2535,7 @@ function preFlop() {
 
 	startButton.classList.add("hidden");
 	closeAllOverlays();
+	if (learnhubOverlay) learnhubOverlay.classList.add("hidden");
 	setSummaryButtonsVisible(false);
 	clearActionLabels();
 	clearActiveTurnPlayer(false);
@@ -3414,6 +3424,7 @@ function init() {
 	document.addEventListener("keydown", (ev) => {
 		if (ev.key === "Escape" && !isBlockingOverlayOpen()) {
 			closeAllOverlays();
+	if (learnhubOverlay) learnhubOverlay.classList.add("hidden");
 		}
 	}, false);
 	startButton.addEventListener("click", startGame, false);
@@ -3424,9 +3435,11 @@ function init() {
 	);
 	instructionsButton.addEventListener(
 		"click",
-		() => openOverlay("instructions"),
+		() => openOverlay("learnhub"),
 		false,
 	);
+	learnhubCloseButton?.addEventListener("click", () => closeOverlay("learnhub"), false);
+	learnhubTabs.forEach((button) => button.addEventListener("click", () => setLearnHubTab(button.dataset.learnhubTab), false));
 	versionButton.addEventListener(
 		"click",
 		() => openOverlay("version"),
@@ -3522,7 +3535,7 @@ poker.init();
  * - AUTO_RELOAD_ON_SW_UPDATE: reload page once after an update
  -------------------------------------------------------------------------------------------------- */
 const USE_SERVICE_WORKER = true;
-const SERVICE_WORKER_VERSION = "2026-08-22-v2";
+const SERVICE_WORKER_VERSION = "feltwise-v3";
 const AUTO_RELOAD_ON_SW_UPDATE = true;
 
 initServiceWorker({
@@ -3530,3 +3543,41 @@ initServiceWorker({
 	serviceWorkerVersion: SERVICE_WORKER_VERSION,
 	autoReloadOnUpdate: AUTO_RELOAD_ON_SW_UPDATE,
 });
+
+function renderLearnHubOverlay() {
+	if (!learnhubOverlay) return;
+	const humanPlayer = gameState.allPlayers.find((p) => !p.isBot) || null;
+	const board = gameState.communityCards.slice();
+	const history = gameState.actionHistory.slice(-10).reverse();
+	const advisorPane = learnhubOverlay.querySelector('[data-learnhub-pane="advisor"]');
+	const tutorialPane = learnhubOverlay.querySelector('[data-learnhub-pane="tutorial"]');
+	const replayPane = learnhubOverlay.querySelector('[data-learnhub-pane="replay"]');
+	const recentTip = humanPlayer ? getPlayerActionState(gameState, humanPlayer) : null;
+	if (advisorPane) {
+		advisorPane.innerHTML = humanPlayer ? `
+			<div class="learn-grid">
+				<div class="learn-card"><span class="learn-pill">当前局面</span><h3>${gameState.handInProgress ? '进行中' : '未开始'}</h3><p>底池 ${gameState.pot} · 公共牌 ${board.length ? board.join(' ') : '—'} · 需要跟注 ${recentTip?.needToCall ?? 0}</p></div>
+				<div class="learn-card"><span class="learn-pill learn-good">建议</span><h3>${recentTip?.canCheck ? '先看牌面与位置' : '先算价格再决定'}</h3><p>策略层已经在牌桌中给出实时建议；学习中心这里是更简洁的摘要，方便你快速判断。</p></div>
+			</div>
+			<div class="learn-card"><h3>本手训练关键词</h3><p>${board.length ? '读牌面、算赔率、看位置' : '起手牌选择、位置、开池尺度'}</p></div>
+		` : `<div class="learn-card"><h3>准备开始</h3><p>输入一个人类玩家名字并开始一手牌后，这里会显示可执行的策略摘要。</p></div>`;
+	}
+	if (tutorialPane) {
+		tutorialPane.innerHTML = `
+			<div class="learn-grid">
+				<div class="learn-card"><h3>新手</h3><p>先学起手牌、位置和底池赔率。</p></div>
+				<div class="learn-card"><h3>进阶</h3><p>再学范围、持续下注和 SPR。</p></div>
+				<div class="learn-card"><h3>高手</h3><p>最后学混合频率、阻断牌和下注尺度。</p></div>
+			</div>`;
+	}
+	if (replayPane) {
+		const items = history.length ? history.map((x) => `<div class="learn-card"><h3>${x.phase ?? 'hand'}</h3><p>${x.action ?? '—'} ${x.amount ?? ''} · 跟注成本 ${x.needToCall ?? 0} · 底池赔率 ${(Math.round((x.potOdds ?? 0) * 100))}%</p></div>`).join('') : `<div class="learn-card"><h3>暂无复盘</h3><p>开始对局后，这里会记录最近的行动。</p></div>`;
+		replayPane.innerHTML = items;
+	}
+}
+
+function setLearnHubTab(name) {
+	learnhubTabs.forEach((button) => button.classList.toggle('active', button.dataset.learnhubTab === name));
+	learnhubPanes.forEach((pane) => pane.classList.toggle('hidden', pane.dataset.learnhubPane !== name));
+	if (learnhubOverlay && !learnhubOverlay.classList.contains('hidden')) renderLearnHubOverlay();
+}
