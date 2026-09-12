@@ -543,10 +543,28 @@ function removeSavedGameSnapshot() {
 	}
 }
 
+function notifyPokerStateChange() {
+	try {
+		globalThis.__feltwiseStateSignals = (globalThis.__feltwiseStateSignals || 0) + 1;
+		globalThis.dispatchEvent(new CustomEvent("poker:statechange", {
+			detail: {
+				appVersion: APP_VERSION,
+				timestamp: Date.now(),
+			},
+		}));
+		if (typeof globalThis.__feltwiseInlineRender === "function") {
+			globalThis.__feltwiseInlineRender();
+		}
+	} catch (error) {
+		console.warn("poker state change dispatch failed", error);
+	}
+}
+
 function saveCurrentGameSnapshot() {
 	if (!shouldSaveCurrentGame()) {
 		if (shouldRemoveCurrentGameSave()) {
 			removeSavedGameSnapshot();
+			notifyPokerStateChange();
 		}
 		return;
 	}
@@ -561,6 +579,7 @@ function saveCurrentGameSnapshot() {
 			SAVED_GAME_STORAGE_KEY,
 			JSON.stringify(createSavedGameSnapshot()),
 		);
+		notifyPokerStateChange();
 	} catch (error) {
 		console.warn("saved game write failed", error);
 	}
@@ -1289,10 +1308,12 @@ function applyPlayerPatches(playerPatches) {
 	playerPatches.forEach(({ player, patch }) => {
 		Object.assign(player, patch);
 	});
+	notifyPokerStateChange();
 }
 
 function applyGameStatePatch(gameStatePatch) {
 	Object.assign(gameState, gameStatePatch);
+	notifyPokerStateChange();
 }
 
 function applyHandContextPatch(handContextPatch) {
@@ -3527,6 +3548,8 @@ globalThis.poker = {
 };
 
 poker.init();
+notifyPokerStateChange();
+globalThis.dispatchEvent(new Event("poker:ready"));
 
 /* --------------------------------------------------------------------------------------------------
  * Service Worker configuration
@@ -3535,7 +3558,7 @@ poker.init();
  * - AUTO_RELOAD_ON_SW_UPDATE: reload page once after an update
  -------------------------------------------------------------------------------------------------- */
 const USE_SERVICE_WORKER = true;
-const SERVICE_WORKER_VERSION = "feltwise-v3";
+const SERVICE_WORKER_VERSION = "feltwise-v7";
 const AUTO_RELOAD_ON_SW_UPDATE = true;
 
 initServiceWorker({
