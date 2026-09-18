@@ -30,7 +30,7 @@
 	<link rel="icon" href="icons/favicon.png" type="image/png" sizes="32x32">
 	<link rel="icon" href="icons/poker-chip.svg" type="image/svg+xml">
 	<link rel="manifest" href="manifest.json">
-	<link rel="stylesheet" href="css/style.css?v=feltwise-v11">
+	<link rel="stylesheet" href="css/style.css?v=feltwise-v12">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 	<link href="https://fonts.googleapis.com/css2?family=Secular+One&display=swap" rel="stylesheet">
@@ -325,10 +325,10 @@
 							<div><span>底池</span><b id="inline-pot-chip">0</b></div><div><span>阶段</span><b id="inline-phase-chip">等待开始</b></div>
 						</div>
 					</div>
-					<div class="hero-right"><div class="label">当前胜率</div><div id="inline-winrate-big" class="big">—</div><div class="bar"><i id="inline-winbar"></i></div><div id="inline-equity-text" class="hint">等待局面数据</div><div id="inline-equity-method" class="analysis-method">等待牌局</div></div>
+					<div class="hero-right"><div class="label">当前胜率</div><div id="inline-winrate-big" class="big" aria-live="polite">—</div><div class="bar"><i id="inline-winbar"></i></div><div id="inline-equity-text" class="hint">等待局面数据</div><div id="inline-equity-method" class="analysis-method">等待牌局</div></div>
 				</div>
 				<div class="card inline-actions"><div class="section-head"><h3>行动建议</h3><span id="inline-confidence-pill" class="pill">—</span></div><div id="inline-action-row" class="action-row"></div></div>
-				<div id="inline-strategy-section" class="card detail-card"><div class="section-head"><h3>GTO 建议</h3><span class="pill muted">实时分析</span></div><p id="inline-reason-text" class="detail-text">开始一手牌后，这里会解释为什么建议这样行动。</p></div>
+				<div id="inline-strategy-section" class="card detail-card"><div class="section-head"><h3>GTO 建议</h3><span class="pill muted">实时分析</span></div><p id="inline-reason-text" class="detail-text" aria-live="polite">开始一手牌后，这里会解释为什么建议这样行动。</p></div>
 				<div class="card detail-card"><div class="section-head"><h3>赔率与复盘</h3><span class="pill muted">最近 8 条</span></div><div class="detail-grid"><div class="subcard"><div class="label">底池赔率 / SPR</div><div id="inline-odds-text" class="big small">—</div><div id="inline-board-text" class="hint">—</div></div><div class="subcard"><div class="label">长期胜率</div><div id="inline-long-winrate" class="big small">—</div><div id="inline-hand-text" class="hint">—</div></div></div><div id="inline-ev-hint" class="ev-hint">等待当前胜率和赔率</div><div id="inline-history-list" class="history"></div></div>
 			</div>
 		</div>
@@ -474,8 +474,8 @@
 		</div>
 		<button type="button" id="learnhub-close-button" class="overlay-close">Close</button>
 	</section>
-	<script type="module" src="./js/app.js?v=feltwise-v15"></script>
-	<script type="module" src="./js/inlineAdvisor.js?v=feltwise-v18"></script>
+	<script type="module" src="./js/app.js?v=feltwise-v16"></script>
+	<script type="module" src="./js/inlineAdvisor.js?v=feltwise-v19"></script>
 </body>
 
 </html>
