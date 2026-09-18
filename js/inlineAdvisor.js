@@ -18,6 +18,8 @@ const el = {
   winrateBig: $("winrate-big"),
   winbar: $("winbar"),
   equityText: $("equity-text"),
+  equityMethod: $("equity-method"),
+  evHint: $("ev-hint"),
   longWinrate: $("long-winrate"),
   handName: $("hand-name"),
   strategyAction: $("strategy-action"),
@@ -350,7 +352,20 @@ function render() {
   if (el.winbar) el.winbar.style.width = `${Math.max(4, Math.min(100, shownEquity || 4))}%`;
   if (el.equityText) el.equityText.textContent = equityValue == null
     ? "正在计算当前牌局胜率…"
-    : `当前胜率约 ${Math.round(shownEquity)}%${equity.fallback ? " · 快速估算" : " · 蒙特卡洛"}`;
+    : `当前胜率约 ${Math.round(shownEquity)}%`;
+  if (el.equityMethod) el.equityMethod.textContent = equityValue == null
+    ? "分析中"
+    : equity.fallback ? "快速估算 · 等待精算" : "蒙特卡洛精算完成";
+  if (el.evHint) {
+    const edge = shownEquity - advice.potOdds * 100;
+    el.evHint.textContent = equityValue == null
+      ? "等待胜率和赔率"
+      : edge >= 0
+      ? `+EV 倾向：胜率高于底池赔率约 ${Math.round(edge)} 个百分点`
+      : `-EV 警示：胜率低于底池赔率约 ${Math.round(Math.abs(edge))} 个百分点`;
+    el.evHint.classList.toggle("positive", edge >= 0);
+    el.evHint.classList.toggle("negative", edge < 0);
+  }
   if (el.longWinrate) el.longWinrate.textContent = longWinrate == null ? "—" : `${longWinrate}%`;
   if (el.handName) el.handName.textContent = advice.hand.label;
   if (el.strategyAction) el.strategyAction.textContent = advice.recommendation;
