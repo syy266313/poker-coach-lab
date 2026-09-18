@@ -1542,3 +1542,27 @@ html, body { touch-action: pan-y; }
 .inline-advisor-shell .action-chip small { position:static; }
 
 .inline-advisor-shell .analysis-method{margin-top:6px;color:#8f9db7;font-size:.72rem;line-height:1.35}.inline-advisor-shell .ev-hint{margin:10px 0 0;padding:9px 11px;border-radius:11px;background:rgba(255,255,255,.05);color:#aeb8d1;font-size:.78rem;line-height:1.4}.inline-advisor-shell .ev-hint.positive{color:#9af0b7;background:rgba(103,213,143,.11)}.inline-advisor-shell .ev-hint.negative{color:#ffb3ad;background:rgba(255,107,107,.11)}
+
+/* v4 mobile scroll model: one page scroller, stable table viewport */
+html { height:auto; min-height:100%; overflow-x:hidden; overflow-y:auto; -webkit-text-size-adjust:100%; }
+body { display:block; height:auto; min-height:100%; overflow-x:hidden; overflow-y:auto; touch-action:pan-y; -webkit-overflow-scrolling:touch; overscroll-behavior-y:auto; }
+main { flex:none; height:clamp(620px, calc(100svh - 48px), 760px); min-height:0; overflow:visible; touch-action:pan-y; }
+main::before, main::after { pointer-events:none; }
+.inline-advisor-shell { position:relative; z-index:5; touch-action:pan-y; overflow:visible; }
+.inline-advisor-shell * { touch-action:auto; }
+.inline-advisor-shell button, .inline-advisor-shell .action-chip { touch-action:manipulation; }
+.inline-advisor-shell .history { max-height:none; overflow:visible; overscroll-behavior:initial; -webkit-overflow-scrolling:auto; }
+.inline-advisor-shell .detail-card, .inline-advisor-shell .inline-actions, .inline-advisor-shell .inline-hero { overflow:visible; }
+@media (max-width:700px) {
+    main { height:clamp(620px, calc(100svh - 42px), 720px); }
+    #table-middle { overflow:visible; }
+    footer { height:auto; min-height:48px; }
+}
+
+/* Final mobile composition: no clipped main viewport and no artificial black tail. */
+html, body { background:radial-gradient(circle at 50% 0%,#172346 0,#08101e 56%); }
+@media (max-width:700px) {
+  main { height:clamp(620px, calc(100svh - 42px), 720px); min-height:620px; overflow:visible; }
+  main > .seat { max-width:112px; }
+  .inline-advisor-shell { min-height:0; }
+}
