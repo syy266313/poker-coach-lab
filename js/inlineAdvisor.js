@@ -376,10 +376,10 @@ function render() {
   if (el.reason) el.reason.textContent = `${advice.title}：${advice.reason}`;
 
   const actions = [
-    { label: advice.action.canCheck ? "Check" : "Fold", tone: advice.action.canCheck ? "primary" : "bad", meta: advice.action.canCheck ? "可免费看牌" : `需跟注 ${advice.action.needToCall}`, active: advice.recommendation.startsWith("Check") || advice.recommendation === "Fold" },
-    { label: "Call", tone: "good", meta: `底池赔率 ${Math.round(advice.potOdds * 100)}%`, active: advice.recommendation === "Call" },
-    { label: "Raise", tone: "primary", meta: "主动建立底池", active: advice.recommendation.includes("Raise") },
-    { label: "All-in", tone: "bad", meta: "高压/终局", active: advice.recommendation === "All-in" },
+    { label: advice.action.canCheck ? "过牌" : "弃牌", tone: advice.action.canCheck ? "primary" : "bad", meta: advice.action.canCheck ? "免费看牌" : `需跟注 ${advice.action.needToCall}`, active: advice.recommendation.startsWith("Check") || advice.recommendation === "Fold" },
+    { label: "跟注", tone: "good", meta: `底池赔率 ${Math.round(advice.potOdds * 100)}%`, active: advice.recommendation === "Call" },
+    { label: "加注", tone: "primary", meta: "主动建立底池", active: advice.recommendation.includes("Raise") },
+    { label: "全下", tone: "bad", meta: "高压/终局", active: advice.recommendation === "All-in" },
   ];
   if (el.actions) el.actions.innerHTML = actions.map((item) => `<div class="action-chip ${item.tone} ${item.active ? "active" : ""}"><div><strong>${item.label}</strong><small>${item.meta}</small></div><span>→</span></div>`).join("");
   if (el.history) el.history.innerHTML = (state.actionHistory || []).slice(-8).reverse().map((item) => `<div class="item"><b>${esc(item.phase || "hand")}</b> · ${esc(item.action || "—")} ${esc(item.amount || "")} · 跟注成本 ${item.needToCall || 0} · 底池赔率 ${Math.round((item.potOdds || 0) * 100)}%</div>`).join("") || '<div class="item">暂无复盘</div>';
