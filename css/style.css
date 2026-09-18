@@ -1540,3 +1540,5 @@ html, body { touch-action: pan-y; }
 .inline-advisor-shell .section-head { position:relative; }
 .inline-advisor-shell .detail-card .pill { flex:0 0 auto; }
 .inline-advisor-shell .action-chip small { position:static; }
+
+.inline-advisor-shell .analysis-method{margin-top:6px;color:#8f9db7;font-size:.72rem;line-height:1.35}.inline-advisor-shell .ev-hint{margin:10px 0 0;padding:9px 11px;border-radius:11px;background:rgba(255,255,255,.05);color:#aeb8d1;font-size:.78rem;line-height:1.4}.inline-advisor-shell .ev-hint.positive{color:#9af0b7;background:rgba(103,213,143,.11)}.inline-advisor-shell .ev-hint.negative{color:#ffb3ad;background:rgba(255,107,107,.11)}
