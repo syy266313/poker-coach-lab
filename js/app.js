@@ -244,8 +244,9 @@ if (SPEED_MODE) {
 	DEBUG_FLOW = true;
 }
 
-const STATE_SYNC_ENDPOINT = "https://poker.tehes.deno.net/state";
-const ACTION_SYNC_ENDPOINT = "https://poker.tehes.deno.net/action";
+const SYNC_BASE_URL = globalThis.FELTWISE_SYNC_BASE_URL || "https://poker.tehes.deno.net";
+const STATE_SYNC_ENDPOINT = `${SYNC_BASE_URL}/state`;
+const ACTION_SYNC_ENDPOINT = `${SYNC_BASE_URL}/action`;
 let tableId = null;
 const STATE_SYNC_DELAY = 750;
 const ACTION_POLL_INTERVAL = 1000;
