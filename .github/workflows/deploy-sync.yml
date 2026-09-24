@@ -1,0 +1,24 @@
+name: Deploy multiplayer sync backend
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'api/**'
+      - '.github/workflows/deploy-sync.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: denoland/deployctl@v1
+        with:
+          project: ${{ secrets.DENO_PROJECT }}
+          entrypoint: api/main.js
+          root: .
+          token: ${{ secrets.DENO_DEPLOY_TOKEN }}
