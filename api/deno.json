@@ -1,0 +1,9 @@
+{
+  "tasks": {
+    "dev": "deno run --allow-net --unstable-kv main.js",
+    "start": "deno run --allow-net --unstable-kv main.js"
+  },
+  "deploy": {
+    "entrypoint": "main.js"
+  }
+}
