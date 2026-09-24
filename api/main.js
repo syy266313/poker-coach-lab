@@ -2,13 +2,17 @@ const kv = await Deno.openKv();
 
 const SYNC_VIEW_SCHEMA_VERSION = 7;
 const primaryOrigin = "https://tehes.github.io";
+const feltwiseOrigin = "https://syy266313.github.io";
 const devOrigin = "http://127.0.0.1:5500";
+const localMinisOrigin = "minis://shared";
 const STATE_TTL = 86_400_000;
 const ACTION_TTL = 120_000;
 const allowedActionNames = new Set(["fold", "check", "call", "raise", "allin"]);
 const allowedOrigins = new Set([
 	primaryOrigin,
+	feltwiseOrigin,
 	devOrigin,
+	localMinisOrigin,
 ]);
 const baseCorsHeaders = {
 	"Access-Control-Allow-Methods": "GET, POST, OPTIONS",
