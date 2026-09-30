@@ -177,10 +177,21 @@ function equityKey(state, hero) {
   return [hero.holeCards.join("-"), (state.communityCards || []).join("-"), opponents].join("|");
 }
 
+function getScriptBasePath() {
+  const scripts = document.getElementsByTagName("script");
+  for (let index = scripts.length - 1; index >= 0; index -= 1) {
+    const src = scripts[index].getAttribute("src") || "";
+    if (src.indexOf("inlineAdvisor") !== -1) {
+      return src.replace(/[^/]*$/, "");
+    }
+  }
+  return "./js/";
+}
+
 function makeWorker() {
   if (typeof Worker === "undefined") return null;
   try {
-    return new Worker(new URL("./equityWorker.js", import.meta.url));
+    return new Worker(getScriptBasePath() + "equityWorker.js");
   } catch {
     return null;
   }
