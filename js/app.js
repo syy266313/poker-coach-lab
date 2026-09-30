@@ -3217,6 +3217,10 @@ function finishHandAfterShowdown() {
 	clearActiveTurnPlayer(false);
 	applyGameStatePatch(handEndPlan.gameStatePatch);
 	renderPot();
+	// Re-sync the board from authoritative state so a partial animation frame can
+	// never leave a half-drawn board behind.
+	renderTableCommunityCards(communityCardSlots, gameState.communityCards);
+	updateHandStrengthDisplays();
 
 	humanTurnController.hide();
 	if (SPEED_MODE) {
