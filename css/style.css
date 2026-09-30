@@ -1153,11 +1153,18 @@ main .seat.folded .hole-cards img:nth-of-type(2) {
     position: absolute;
     background-color: var(--font-color);
     color: var(--blue-darker);
-    padding: 2px 8px;
+    padding: 1px 7px;
     border-radius: 999px;
-    font-size: 0.9rem;
+    font-size: 0.72rem;
+    line-height: 1.5;
+    max-width: 86px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     box-shadow: var(--shadow-close);
     transition: all 0.3s;
+    pointer-events: none;
+    opacity: 0.95;
 }
 
 .folded .pill {
@@ -1165,13 +1172,13 @@ main .seat.folded .hole-cards img:nth-of-type(2) {
 }
 
 .win-probability {
-    top: 0px;
-    right: 0px;
+    top: -7px;
+    right: -5px;
 }
 
 .hand-strength {
-    left: 0px;
-    bottom: 10px;
+    left: -5px;
+    bottom: -7px;
 }
 
 .folded .win-probability {
@@ -1376,55 +1383,6 @@ footer a { color: #9ba9be; }
     footer { justify-content: center; padding-bottom: 10px; font-size: .7rem; }
 }
 
-/* v2.1 mobile composition fix: keep the whole table inside the viewport */
-html, body { overflow-x: hidden; }
-@media (max-width: 700px) {
-    main {
-        width: 100%; min-height: 0; height: auto; flex: 0 0 auto; overflow: hidden;
-        padding: 14px 8px 16px;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        grid-template-rows: 132px 235px 132px;
-        gap: 8px 4px;
-    }
-    main::before {
-        width: 112%; height: 330px; top: 50%; left: 50%;
-        border-width: 7px; transform: translate(-50%, -50%);
-    }
-    main .seat { width: min(30vw, 118px); height: 122px; align-self: center; }
-    .hole-cards { height: 54px; }
-    .hole-cards img { width: 42px; height: 59px; min-width: 0 !important; margin: 0; }
-    .hole-cards img:nth-of-type(1) { left: 3px; }
-    .hole-cards img:nth-of-type(2) { right: 3px; }
-    .seat h3 { height: 29px; min-height: 29px; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
-    .seat .chips { height: 30px; }
-    .chips :where(.total,.bet) { line-height: 1.25; }
-    #table-middle { min-height: 0; height: 235px; align-self: center; overflow: hidden; padding: 13px 8px; }
-    #table-middle .infos { flex: 0 0 35px; }
-    #table-middle #community-cards { flex: 0 0 60px; }
-    #table-middle .actions { flex: 0 0 auto; }
-    footer { flex: 0 0 auto; min-height: 44px; }
-}
-
-/* v2.2: card-only sizing — utility icons must not inherit card dimensions */
-.hole-cards img.card { width: clamp(47px, 5.5vw, 70px); height: auto; min-width: 0 !important; margin: 3px; }
-.hole-cards > img.close,
-.hole-cards > img.rotate,
-.hole-cards > img.blind-icons { width: auto !important; height: auto !important; min-width: 0 !important; margin: 0; }
-.hole-cards > img.close { width: 29px !important; height: 29px !important; top: -7px; right: -7px; }
-.hole-cards > img.rotate { width: 22px !important; height: 22px !important; }
-.hole-cards > img.blind-icons { width: 20px !important; height: 20px !important; }
-@media (max-width: 700px) {
-    .hole-cards img.card { width: 42px; height: auto; margin: 0; }
-    .hole-cards > img.close { width: 25px !important; height: 25px !important; top: -5px; right: -5px; }
-    .hole-cards > img.rotate { width: 18px !important; height: 18px !important; }
-    .hole-cards > img.blind-icons { width: 17px !important; height: 17px !important; }
-}
-
-/* icon correction with stronger specificity than mobile card rules */
-main .seat .hole-cards > img.close { width: 25px !important; height: 25px !important; min-width: 25px !important; top: -4px; right: -4px; }
-main .seat .hole-cards > img.rotate { width: 18px !important; height: 18px !important; min-width: 18px !important; }
-main .seat .hole-cards > img.blind-icons { width: 17px !important; height: 17px !important; min-width: 17px !important; }
-
 /* ============================================================================
    FELTWISE v3 — actual table composition, not a stretched grid
    ============================================================================ */
@@ -1543,66 +1501,185 @@ html, body { touch-action: pan-y; }
 
 .inline-advisor-shell .analysis-method{margin-top:6px;color:#8f9db7;font-size:.72rem;line-height:1.35}.inline-advisor-shell .ev-hint{margin:10px 0 0;padding:9px 11px;border-radius:11px;background:rgba(255,255,255,.05);color:#aeb8d1;font-size:.78rem;line-height:1.4}.inline-advisor-shell .ev-hint.positive{color:#9af0b7;background:rgba(103,213,143,.11)}.inline-advisor-shell .ev-hint.negative{color:#ffb3ad;background:rgba(255,107,107,.11)}
 
-/* v4 mobile scroll model: one page scroller, stable table viewport */
-html { height:auto; min-height:100%; overflow-x:hidden; overflow-y:auto; -webkit-text-size-adjust:100%; }
-body { display:block; height:auto; min-height:100%; overflow-x:hidden; overflow-y:auto; touch-action:pan-y; -webkit-overflow-scrolling:touch; overscroll-behavior-y:auto; }
-main { flex:none; height:clamp(620px, calc(100svh - 48px), 760px); min-height:0; overflow:visible; touch-action:pan-y; }
-main::before, main::after { pointer-events:none; }
-.inline-advisor-shell { position:relative; z-index:5; touch-action:pan-y; overflow:visible; }
-.inline-advisor-shell * { touch-action:auto; }
-.inline-advisor-shell button, .inline-advisor-shell .action-chip { touch-action:manipulation; }
-.inline-advisor-shell .history { max-height:none; overflow:visible; overscroll-behavior:initial; -webkit-overflow-scrolling:auto; }
-.inline-advisor-shell .detail-card, .inline-advisor-shell .inline-actions, .inline-advisor-shell .inline-hero { overflow:visible; }
-@media (max-width:700px) {
-    main { height:clamp(620px, calc(100svh - 42px), 720px); }
-    #table-middle { overflow:visible; }
-    footer { height:auto; min-height:48px; }
+/* ============================================================================
+   FELTWISE FLUID LAYOUT — one adaptive system for every iPhone size.
+   Tested targets: 6s/SE 375x667 · 14/15 393x852 · XR 414x896 · Pro Max 440x956.
+   Everything scales with vw/vh + clamp(), so no per-device hardcoding.
+   ============================================================================ */
+
+/* ---- page shell ---------------------------------------------------------- */
+main {
+    position: relative;
+    display: block;
+    flex: 0 0 auto;          /* the base stylesheet sets flex:1 (basis 0) which
+                                collapses the table to 0 height in a column flex body */
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 0;
+    /* Table viewport follows screen height, but never eats the whole phone. */
+    height: clamp(430px, 66vh, 640px);
+    min-height: 0;
+    overflow: hidden;
+}
+main::before {
+    /* Felt scales with the table box and stays a readable oval. */
+    width: 106%;
+    height: min(56%, 320px);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-width: clamp(5px, 1.4vw, 10px);
+}
+main::after {
+    width: 92%;
+    height: min(46%, 268px);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
 }
 
-/* Final mobile composition: no clipped main viewport and no artificial black tail. */
-html, body { background:radial-gradient(circle at 50% 0%,#172346 0,#08101e 56%); }
-@media (max-width:700px) {
-  main { height:clamp(620px, calc(100svh - 42px), 720px); min-height:620px; overflow:visible; }
-  main > .seat { max-width:112px; }
-  .inline-advisor-shell { min-height:0; }
+/* ---- seats --------------------------------------------------------------- */
+main > .seat {
+    position: absolute;
+    width: clamp(74px, 21vw, 108px);
+    max-width: none;
+    height: auto;
+    align-self: auto;
+    justify-self: auto;
+    z-index: 3;
+}
+main > .seat:nth-of-type(1) { top: 2%; left: 1.5%; }
+main > .seat:nth-of-type(2) { top: 0; left: 50%; transform: translateX(-50%); }
+main > .seat:nth-of-type(3) { top: 2%; right: 1.5%; }
+main > .seat:nth-of-type(4) { bottom: 2%; left: 1.5%; }
+main > .seat:nth-of-type(5) { bottom: 0; left: 50%; transform: translateX(-50%); }
+main > .seat:nth-of-type(6) { bottom: 2%; right: 1.5%; }
+main > .seat:nth-of-type(2)[data-rotation="0"],
+main > .seat:nth-of-type(5)[data-rotation="0"] { transform: translateX(-50%); }
+
+main > .seat .hole-cards { height: clamp(38px, 10.4vw, 56px); }
+main > .seat .hole-cards img.card { width: clamp(27px, 7.3vw, 40px); height: auto; margin: 0; }
+main > .seat h3 {
+    height: clamp(20px, 5.6vw, 27px);
+    min-height: 0;
+    margin: 2px 0 0;
+    padding: 1px 4px;
+    border-radius: 8px;
+    font-size: clamp(0.56rem, 2.5vw, 0.72rem);
+}
+main > .seat .chips { height: clamp(18px, 5vw, 24px); gap: 3px; }
+main > .seat .chips .stack-visual { display: none; }
+main > .seat .chips :where(.total, .bet) { font-size: clamp(0.56rem, 2.5vw, 0.72rem); min-width: 0; }
+
+/* Utility icons scale with the card, never dominate it. */
+main .seat .hole-cards > img.close { width: clamp(15px, 4.4vw, 21px) !important; height: clamp(15px, 4.4vw, 21px) !important; min-width: 0 !important; top: -3px; right: -3px; }
+main .seat .hole-cards > img.rotate { width: clamp(12px, 3.5vw, 17px) !important; height: clamp(12px, 3.5vw, 17px) !important; min-width: 0 !important; }
+main .seat .hole-cards > img.blind-icons { width: clamp(12px, 3.5vw, 17px) !important; height: clamp(12px, 3.5vw, 17px) !important; min-width: 0 !important; }
+
+/* Info pills sit outside the cards and shrink with the screen. */
+.pill {
+    font-size: clamp(0.55rem, 2.4vw, 0.7rem);
+    padding: 0 clamp(4px, 1.6vw, 7px);
+    max-width: clamp(50px, 15vw, 86px);
+    line-height: 1.55;
+}
+.win-probability { top: clamp(-6px, -1.4vw, -3px); right: -4px; }
+.hand-strength { left: -4px; bottom: clamp(-6px, -1.4vw, -3px); }
+
+/* ---- table middle -------------------------------------------------------- */
+#table-middle {
+    position: absolute;
+    left: 4%;
+    top: 23%;
+    width: 92%;
+    height: 54%;
+    padding: clamp(6px, 2vw, 14px);
+    gap: clamp(6px, 1.8vw, 12px);
+    border-radius: clamp(12px, 3.5vw, 20px);
+}
+#table-middle .infos { flex: 0 0 auto; gap: clamp(3px, 1vw, 8px); }
+#table-middle .infos div {
+    min-width: 0;
+    padding: clamp(4px, 1.3vw, 9px) clamp(4px, 1.4vw, 12px);
+    border-radius: clamp(7px, 2vw, 10px);
+    font-size: clamp(0.6rem, 2.6vw, 0.8rem);
+}
+#pot { font-size: clamp(0.72rem, 3vw, 1rem); }
+#notification { font-size: clamp(0.56rem, 2.4vw, 0.72rem); padding: clamp(4px, 1.4vw, 7px) clamp(4px, 1.6vw, 10px) !important; }
+#community-cards { flex: 0 0 auto; gap: clamp(3px, 1.2vw, 8px); }
+#table-middle #community-cards .cardslot { width: clamp(38px, 11.4vw, 58px); max-width: none; height: auto; }
+
+.actions { gap: clamp(4px, 1.6vw, 8px); }
+.actions button {
+    min-width: clamp(48px, 14vw, 84px);
+    padding: clamp(6px, 2vw, 10px) clamp(8px, 2.8vw, 15px);
+    border-radius: clamp(8px, 2.4vw, 11px);
+    font-size: clamp(0.63rem, 2.7vw, 0.85rem);
+}
+#amount-controls { gap: clamp(4px, 1.6vw, 10px); margin: 4px 0 0; padding: clamp(5px, 1.8vw, 10px); }
+input[type=range] { height: clamp(9px, 2.4vw, 12px); margin: 6px 0; }
+input[type=range]::-webkit-slider-thumb { width: clamp(20px, 6vw, 28px); height: clamp(20px, 6vw, 28px); }
+output { width: clamp(48px, 14vw, 68px); padding: 4px 6px; font-size: clamp(0.72rem, 2.9vw, 0.9rem); }
+
+/* ---- analysis flow below the table -------------------------------------- */
+.inline-advisor-shell { padding: clamp(10px, 3vw, 16px) clamp(10px, 3vw, 16px) 18px; }
+.inline-advisor-shell .big { font-size: clamp(1.7rem, 8vw, 2.35rem); }
+.inline-advisor-shell .big.small { font-size: clamp(1.05rem, 4.6vw, 1.4rem); }
+.inline-advisor-shell .player-name { font-size: clamp(1.1rem, 5vw, 1.4rem); }
+.inline-advisor-shell .hint,
+.inline-advisor-shell .meta { font-size: clamp(0.72rem, 3.1vw, 0.88rem); }
+.inline-advisor-shell .label,
+.inline-advisor-shell .mini-stats span { font-size: clamp(0.64rem, 2.8vw, 0.74rem); }
+.inline-advisor-shell .mini-stats b { font-size: clamp(0.82rem, 3.6vw, 1rem); }
+.inline-advisor-shell .mini-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(6px, 2vw, 10px); }
+.inline-advisor-shell .action-chip { flex: 1 1 calc(50% - 6px); padding: clamp(8px, 2.6vw, 12px); min-width: 0; }
+.inline-advisor-shell .action-chip strong { font-size: clamp(0.84rem, 3.6vw, 1rem); }
+.inline-advisor-shell .action-chip small { font-size: clamp(0.62rem, 2.7vw, 0.74rem); }
+.inline-advisor-shell .detail-text { font-size: clamp(0.82rem, 3.5vw, 0.95rem); }
+.inline-advisor-shell .detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: clamp(6px, 2vw, 10px); }
+.inline-advisor-shell .item { font-size: clamp(0.68rem, 2.9vw, 0.8rem); }
+.inline-advisor-shell .history { max-height: none; overflow: visible; }
+
+footer { height: auto; min-height: 44px; padding: 8px clamp(10px, 3vw, 20px) 14px; font-size: clamp(0.68rem, 2.9vw, 0.82rem); }
+
+/* Very short screens (landscape or small SE) keep the table usable. */
+@media (max-height: 600px) {
+    main { height: clamp(340px, 78vh, 460px); }
+    #table-middle { top: 20%; height: 58%; }
+}
+/* Tablets and wide screens: let the table breathe but stay centred. */
+@media (min-width: 760px) {
+    main { height: clamp(520px, 68vh, 680px); }
 }
 
 /* ============================================================================
-   iOS 13 fallbacks: dvh/svh and aspect-ratio are unsupported on Safari 13.
+   iOS 13 fallbacks (Safari 13 lacks dvh/svh, aspect-ratio, clamp in old builds,
+   and flex gap). Kept last so they only apply on genuinely old engines.
    ============================================================================ */
-@supports not (height: 100dvh) {
-    html { min-height: 100vh; }
-    body { min-height: 100vh; }
-    main { height: calc(100vh - 62px); }
+@supports not (height: 100svh) {
+    main { height: 66vh; min-height: 430px; max-height: 640px; }
 }
 @supports not (aspect-ratio: 1) {
-    .cardslot { height: 24vmin; }
-    .cardslot:empty { height: 24vmin; }
-    .inline-advisor-shell .slot { height: 54px; }
+    /* Let the card SVG keep its own 5:7 ratio instead of relying on aspect-ratio. */
+    .cardslot { height: auto; }
+    .cardslot img { width: 100%; height: auto; display: block; }
+    .cardslot:empty { height: clamp(58px, 18vw, 96px); }
+    .inline-advisor-shell .slot { min-height: 48px; }
+    .hole-cards img.card { height: auto; }
 }
-@media (max-width: 700px) {
-    @supports not (aspect-ratio: 1) {
-        .cardslot { height: 19vmin; }
-    }
-}
-@supports not (height: 100svh) {
-    main { height: calc(100vh - 48px); }
-}
-/* iOS 13 has no clamp() support in older builds; provide a safe fallback width. */
 @supports not (width: clamp(1px, 2px, 3px)) {
-    main > .seat { width: 168px; }
+    /* Pre-clamp iOS: fall back to plain percentages. */
+    main { height: 66vh; min-height: 430px; max-height: 640px; }
+    main > .seat { width: 21vw; }
+    main > .seat .hole-cards img.card { width: 7.3vw; }
+    #table-middle #community-cards .cardslot { width: 11.4vw; }
     .inline-advisor-shell .big { font-size: 2rem; }
 }
-
-/* ============================================================================
-   iOS 13 fallback: Safari 13 has no flex `gap` (it landed in 14.1).
-   `inset` shipped in the same release, so it works as a reliable proxy.
-   ============================================================================ */
 @supports not (inset: 0px) {
-    /* Inline advisor action row */
+    /* No flex gap before Safari 14.1 — emulate with margins. */
     .inline-advisor-shell .action-row { margin: -4px; }
     .inline-advisor-shell .action-row > * { margin: 4px; }
-    .inline-advisor-shell .section-head { margin-bottom: 10px; }
     .inline-advisor-shell .section-head > * + * { margin-left: 8px; }
     .inline-advisor-shell .inline-meta > * + * { margin-left: 8px; }
     .inline-advisor-shell .inline-hero { display: block; }
@@ -1610,4 +1687,8 @@ html, body { background:radial-gradient(circle at 50% 0%,#172346 0,#08101e 56%);
     .inline-advisor-shell .history > * + * { margin-top: 7px; }
     .inline-advisor-shell .mini-stats { display: block; }
     .inline-advisor-shell .mini-stats > div { margin-bottom: 8px; }
+    .actions { margin: -3px; }
+    .actions > * { margin: 3px; }
+    #table-middle .infos { margin: -2px; }
+    #table-middle .infos > * { margin: 2px; }
 }
