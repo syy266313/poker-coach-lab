@@ -1593,3 +1593,21 @@ html, body { background:radial-gradient(circle at 50% 0%,#172346 0,#08101e 56%);
     main > .seat { width: 168px; }
     .inline-advisor-shell .big { font-size: 2rem; }
 }
+
+/* ============================================================================
+   iOS 13 fallback: Safari 13 has no flex `gap` (it landed in 14.1).
+   `inset` shipped in the same release, so it works as a reliable proxy.
+   ============================================================================ */
+@supports not (inset: 0px) {
+    /* Inline advisor action row */
+    .inline-advisor-shell .action-row { margin: -4px; }
+    .inline-advisor-shell .action-row > * { margin: 4px; }
+    .inline-advisor-shell .section-head { margin-bottom: 10px; }
+    .inline-advisor-shell .section-head > * + * { margin-left: 8px; }
+    .inline-advisor-shell .inline-meta > * + * { margin-left: 8px; }
+    .inline-advisor-shell .inline-hero { display: block; }
+    .inline-advisor-shell .hero-right { margin-top: 12px; }
+    .inline-advisor-shell .history > * + * { margin-top: 7px; }
+    .inline-advisor-shell .mini-stats { display: block; }
+    .inline-advisor-shell .mini-stats > div { margin-bottom: 8px; }
+}
