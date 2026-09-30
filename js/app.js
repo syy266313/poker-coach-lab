@@ -3554,13 +3554,15 @@ globalThis.dispatchEvent(new Event("poker:ready"));
 
 /* --------------------------------------------------------------------------------------------------
  * Service Worker configuration
- * - USE_SERVICE_WORKER: enable or disable SW for this project
+ * - USE_SERVICE_WORKER: keep disabled so iOS 13 devices never serve a stale
+ *   cached bundle (a stale cache is what makes "Start" look dead after an update).
  * - SERVICE_WORKER_VERSION: bump to force new SW and new cache
- * - AUTO_RELOAD_ON_SW_UPDATE: reload page once after an update
+ * - AUTO_RELOAD_ON_SW_UPDATE: reloading on controllerchange can loop inside
+ *   older WebKit, so it stays off.
  -------------------------------------------------------------------------------------------------- */
-const USE_SERVICE_WORKER = true;
-const SERVICE_WORKER_VERSION = "feltwise-v7";
-const AUTO_RELOAD_ON_SW_UPDATE = true;
+const USE_SERVICE_WORKER = false;
+const SERVICE_WORKER_VERSION = "feltwise-ios13-v2";
+const AUTO_RELOAD_ON_SW_UPDATE = false;
 
 initServiceWorker({
 	useServiceWorker: USE_SERVICE_WORKER,
