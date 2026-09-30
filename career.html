@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="zh-Hans">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+	<meta name="theme-color" content="#0b1020">
+	<title>生涯 · Feltwise</title>
+	<link rel="stylesheet" href="css/career.css?v=1">
+</head>
+
+<body>
+	<div class="app">
+		<header class="topbar">
+			<a class="back" href="./index.html">←</a>
+			<h1>生涯</h1>
+			<button id="refresh" class="ghost">刷新</button>
+		</header>
+
+		<nav class="tabs">
+			<button data-tab="record">战绩</button>
+			<button data-tab="data" class="active">数据</button>
+		</nav>
+
+		<section class="filters">
+			<div class="filter-row">
+				<button class="chip">MTT</button>
+				<button class="chip">SNG</button>
+				<button class="chip active">训练赛</button>
+				<button class="chip wide" id="range">全部</button>
+			</div>
+			<div class="filter-row sub">
+				<button class="chip active">国际扑克</button>
+				<button class="chip">短牌</button>
+				<button class="chip">奥马哈</button>
+			</div>
+		</section>
+
+		<section class="pane" data-pane="data">
+			<article class="card main-stat">
+				<div class="card-title">基础数据</div>
+				<div id="bb-per-100" class="headline">0bb</div>
+				<div class="headline-label">每百手</div>
+				<div class="grid-3">
+					<div><b id="total-hands">0</b><span>总手数</span></div>
+					<div><b id="vpip" class="warn">0%</b><span>入池率</span></div>
+					<div><b id="vpip-win" class="warn">0%</b><span>入池胜率</span></div>
+				</div>
+			</article>
+
+			<article class="card">
+				<div class="card-title">进阶数据</div>
+				<div class="grid-4">
+					<div><b id="aggression">0</b><span>激进度</span></div>
+					<div><b id="allin-win" class="warn">0%</b><span>All-In胜率</span></div>
+					<div><b id="pfr" class="warn">0%</b><span>翻前加分</span></div>
+					<div><b id="preflop-win" class="warn">0%</b><span>翻前胜率</span></div>
+					<div><b id="flop-rate" class="warn">0%</b><span>翻牌率</span></div>
+					<div><b id="flop-win">0%</b><span>翻牌胜率</span></div>
+					<div><b id="showdown-rate" class="warn">0%</b><span>摊牌率</span></div>
+					<div><b id="showdown-win" class="warn">0%</b><span>摊牌胜率</span></div>
+				</div>
+			</article>
+
+			<article class="card extra">
+				<div class="card-title">盈亏</div>
+				<div class="grid-3">
+					<div><b id="net-bb">0</b><span>净盈亏 bb</span></div>
+					<div><b id="hands-won">0</b><span>赢牌手数</span></div>
+					<div><b id="biggest-pot">0</b><span>最大底池</span></div>
+				</div>
+			</article>
+		</section>
+
+		<section class="pane hidden" data-pane="record">
+			<article class="card export">
+				<div class="card-title">导出给 AI 分析</div>
+				<p class="muted">牌局记录只保存在本机，导出时才会生成文本。</p>
+				<div class="export-actions">
+					<button id="export-md" class="primary">导出 Markdown</button>
+					<button id="export-json">导出 JSON</button>
+					<button id="export-fav">只导出收藏</button>
+					<button id="copy-prompt">复制分析提示词</button>
+					<button id="clear-data" class="danger">清空生涯数据</button>
+				</div>
+				<div id="export-out" class="export-out hidden">
+					<div class="export-head">
+						<span id="export-info"></span>
+						<button id="copy-export" class="ghost small">复制</button>
+					</div>
+					<textarea id="export-text" readonly></textarea>
+				</div>
+			</article>
+
+			<article class="card">
+				<div class="card-title">牌局收藏 <span id="fav-count" class="badge">0</span></div>
+				<label class="toggle"><input type="checkbox" id="fav-only"> 只看收藏</label>
+				<div id="hand-list" class="hand-list"></div>
+			</article>
+		</section>
+
+		<footer class="footer">
+			<span>本地数据 · 不上传</span>
+			<a href="./index.html">回到牌桌</a>
+		</footer>
+	</div>
+	<script src="./js/compat-polyfills.js"></script>
+	<script src="./js/careerPage.js"></script>
+</body>
+
+</html>
