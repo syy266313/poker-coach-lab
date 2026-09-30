@@ -23,12 +23,26 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install build dependency
+        run: npm install --no-save --no-audit --no-fund esbuild@0.23.1
+
+      - name: Build iOS 13 compatible bundle
+        run: node tools/build.mjs
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
+
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: .
+          path: dist
+
       - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
