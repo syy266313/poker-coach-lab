@@ -1566,3 +1566,30 @@ html, body { background:radial-gradient(circle at 50% 0%,#172346 0,#08101e 56%);
   main > .seat { max-width:112px; }
   .inline-advisor-shell { min-height:0; }
 }
+
+/* ============================================================================
+   iOS 13 fallbacks: dvh/svh and aspect-ratio are unsupported on Safari 13.
+   ============================================================================ */
+@supports not (height: 100dvh) {
+    html { min-height: 100vh; }
+    body { min-height: 100vh; }
+    main { height: calc(100vh - 62px); }
+}
+@supports not (aspect-ratio: 1) {
+    .cardslot { height: 24vmin; }
+    .cardslot:empty { height: 24vmin; }
+    .inline-advisor-shell .slot { height: 54px; }
+}
+@media (max-width: 700px) {
+    @supports not (aspect-ratio: 1) {
+        .cardslot { height: 19vmin; }
+    }
+}
+@supports not (height: 100svh) {
+    main { height: calc(100vh - 48px); }
+}
+/* iOS 13 has no clamp() support in older builds; provide a safe fallback width. */
+@supports not (width: clamp(1px, 2px, 3px)) {
+    main > .seat { width: 168px; }
+    .inline-advisor-shell .big { font-size: 2rem; }
+}
