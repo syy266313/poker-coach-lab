@@ -381,6 +381,9 @@ export function createShowdownCommitPlan(gameState, showdownResult) {
 	const playerPatches = [];
 	const payoutPlayerPatches = [];
 	const mainPotWinnerSet = new Set(showdownResult.mainPotWinners);
+	// Standard poker: only players who win a pot must show. Everyone else mucks,
+	// so beaten hands stay hidden unless the table is asked to reveal them.
+	const showdownWinnerSet = new Set(showdownResult.winningPlayers);
 
 	gameState.players.forEach((player) => {
 		const patch = {
@@ -390,7 +393,7 @@ export function createShowdownCommitPlan(gameState, showdownResult) {
 		if (statsPatch) {
 			patch.stats = statsPatch;
 		}
-		if (showdownResult.hadShowdown && showdownResult.activePlayers.includes(player)) {
+		if (showdownResult.hadShowdown && showdownWinnerSet.has(player)) {
 			patch.visibleHoleCards = [true, true];
 		}
 		if (mainPotWinnerSet.has(player)) {
@@ -414,7 +417,7 @@ export function createShowdownCommitPlan(gameState, showdownResult) {
 		},
 		transferQueue: showdownResult.transferQueue.slice(),
 		revealPlayers: showdownResult.hadShowdown
-			? showdownResult.activePlayers.slice()
+			? showdownResult.activePlayers.filter((player) => showdownWinnerSet.has(player))
 			: [],
 		mainPotWinners: showdownResult.mainPotWinners.slice(),
 		winningPlayers: showdownResult.winningPlayers.slice(),
