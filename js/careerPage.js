@@ -1,5 +1,5 @@
 /* Career page: reads the local Feltwise career store and renders stats,
-   hand collection and AI export helpers. */
+   the hand collection and AI-ready exports. */
 (function () {
 	"use strict";
 
@@ -36,7 +36,7 @@
 			hands,
 			bbPer100: hands ? Math.round((num(s.netBB, 0) / hands) * 100 * 10) / 10 : 0,
 			vpip: percent(num(s.vpipHands, 0), hands),
-			vpipWin: percent(num(s.handsWon, 0), num(s.vpipHands, 0)) ,
+			vpipWin: percent(num(s.handsWon, 0), num(s.vpipHands, 0)),
 			pfr: percent(num(s.pfrHands, 0), hands),
 			aggression: num(s.calls, 0) ? Math.round((num(s.raises, 0) / s.calls) * 100) / 100 : num(s.raises, 0),
 			allInWin: percent(num(s.allInWon, 0), num(s.allIns, 0)),
@@ -77,31 +77,78 @@
 		$("#biggest-pot").textContent = s.biggestPot;
 	}
 
-	function visibleHands() {
-		const hands = data.hands.slice().reverse();
-		return favoritesOnly ? hands.filter((hand) => hand.favorite) : hands;
+	const PHASE_ORDER = ["preflop", "flop", "turn", "river", "showdown"];
+	const PHASE_LABEL = { preflop: "翻前", flop: "翻牌", turn: "转牌", river: "河牌", showdown: "摊牌" };
+
+	function actionLine(actions) {
+		return actions.map((item) => {
+			const name = item.player || (item.isHuman ? "我" : "对手");
+			let text = `${name} `;
+			switch (item.action) {
+				case "fold": text += "弃牌"; break;
+				case "check": text += "过牌"; break;
+				case "call": text += `跟注 ${item.amount}`; break;
+				case "raise": text += `加注到 ${item.amount}`; break;
+				case "allin": text += `全下 ${item.amount}`; break;
+				default: text += item.action;
+			}
+			if (item.needToCall > 0 && item.action === "call") text += `（底池赔率 ${item.potOdds}%）`;
+			return text;
+		}).join(" · ");
+	}
+
+	function boardForPhase(phase, actions, finalBoard) {
+		const first = (actions || []).find((item) => item.phase === phase);
+		if (first && Array.isArray(first.board) && first.board.length) return first.board;
+		const need = { flop: 3, turn: 4, river: 5 }[phase];
+		if (need && Array.isArray(finalBoard)) return finalBoard.slice(0, need);
+		return Array.isArray(finalBoard) ? finalBoard : [];
+	}
+
+	function groupByStreet(actions) {
+		const groups = {};
+		actions.forEach((item) => {
+			const phase = PHASE_ORDER.indexOf(item.phase) === -1 ? "preflop" : item.phase;
+			if (!groups[phase]) groups[phase] = [];
+			groups[phase].push(item);
+		});
+		return groups;
 	}
 
 	function renderHands() {
 		const list = $("#hand-list");
-		const hands = visibleHands();
+		const hands = data.hands.slice().reverse();
+		const shown = favoritesOnly ? hands.filter((hand) => hand.favorite) : hands;
 		const favCount = data.hands.filter((hand) => hand.favorite).length;
 		$("#fav-count").textContent = String(favCount);
-		if (!hands.length) {
+		if (!shown.length) {
 			list.innerHTML = '<div class="empty">还没有牌局记录。回到牌桌打几手，这里会自动累积。</div>';
 			return;
 		}
-		list.innerHTML = hands.slice(0, 300).map((hand) => {
+		list.innerHTML = shown.slice(0, 300).map((hand) => {
 			const net = hand.netBB > 0 ? `+${hand.netBB}` : `${hand.netBB}`;
-			const actions = (hand.actions || []).map((item) => `${item.phase} ${item.action}${item.amount ? " " + item.amount : ""}`).join(" → ");
+			const groups = groupByStreet(hand.actions || []);
+			const streets = PHASE_ORDER
+				.filter((phase) => groups[phase] && groups[phase].length)
+				.map((phase) => `<div class="hand-street"><b>${PHASE_LABEL[phase]}</b>${phase !== "preflop" ? `[${cardsText(boardForPhase(phase, hand.actions, hand.board))}] ` : ""}${actionLine(groups[phase])}</div>`)
+				.join("");
+			const resultLine = hand.result
+				? hand.result
+				: hand.folded ? "我弃牌" : (hand.won ? "我赢下底池" : "我输掉底池");
+			const shownCards = (hand.shownCards || [])
+				.map((entry) => `${entry.name} ${cardsText(entry.holeCards)}`)
+				.join(" · ");
 			return `<div class="hand-item" data-id="${hand.id}">
 				<div class="hand-top">
 					<span class="hand-cards">${cardsText(hand.holeCards)}</span>
 					<span class="hand-net ${hand.netBB >= 0 ? "pos" : "neg"}">${net} bb</span>
 					<button class="star ${hand.favorite ? "on" : ""}" data-fav="${hand.id}" title="收藏">${hand.favorite ? "★" : "☆"}</button>
 				</div>
-				<div class="hand-meta">${hand.position || "—"} · ${hand.players || 0}人 · 公共牌 ${cardsText(hand.board)} · 底池 ${hand.pot || 0}</div>
-				<div class="hand-meta">${actions || "无行动记录"}</div>
+				<div class="hand-meta">${hand.position || "—"} · ${hand.players || 0}人 · 盲注 ${hand.blinds || "—"} · 公共牌 ${cardsText(hand.board)}</div>
+				<div class="hand-meta">底池 ${hand.pot || 0}${hand.potWon ? ` · 我赢得 ${hand.potWon}` : ""}</div>
+				${streets}
+				<div class="hand-meta">结果：${resultLine}</div>
+				${shownCards ? `<div class="hand-meta">亮牌：${shownCards}</div>` : ""}
 			</div>`;
 		}).join("");
 	}
@@ -123,18 +170,17 @@
 		}
 	}
 
-	const summaryLine = () => {
+	function summaryLine() {
 		const s = summary();
 		return `${data.hands.length} 手 · 每百手 ${s.bbPer100}bb · 入池率 ${s.vpip}%`;
-	};
+	}
 
-	/* Markdown export */
-	const suitMapMd = suitMap;
-	const cardTextMd = cardText;
 	function markdown(options) {
 		const opts = options || {};
 		const s = summary();
-		const hands = (opts.favoritesOnly ? data.hands.filter((hand) => hand.favorite) : data.hands).slice(-(opts.limit || data.hands.length));
+		const source = opts.favoritesOnly ? data.hands.filter((hand) => hand.favorite) : data.hands;
+		const hands = opts.limit ? source.slice(-opts.limit) : source;
+
 		const lines = [];
 		lines.push("# Feltwise 德州扑克复盘导出");
 		lines.push("");
@@ -143,7 +189,8 @@
 		lines.push("1. 指出重复出现的技术漏洞，并按影响大小排序。");
 		lines.push("2. 对关键牌局给出更优替代打法和理由。");
 		lines.push("3. 结合底池赔率、位置与牌力，说明哪些决定是 -EV。");
-		lines.push("4. 给出下一阶段最值得练习的三个方向。");
+		lines.push("4. 指出对手读牌上的错误，以及被我忽略的下注模式。");
+		lines.push("5. 给出下一阶段最值得练习的三个方向。");
 		lines.push("");
 		lines.push("## 总览");
 		lines.push("");
@@ -160,19 +207,29 @@
 		lines.push(`| All-in 胜率 | ${s.allInWin}% |`);
 		lines.push(`| 净盈亏 | ${s.netBB} bb |`);
 		lines.push("");
-		lines.push(`## 牌局记录（${hands.length} 手）`);
+		lines.push(`## 牌局记录（${hands.length} 手，按时间从早到晚）`);
 		lines.push("");
+
 		hands.forEach((hand, index) => {
-			lines.push(`### 第 ${index + 1} 手 · ${hand.at}`);
+			const groups = groupByStreet(hand.actions || []);
+			const when = (hand.at || "").replace("T", " ").slice(0, 19);
+			lines.push(`### 第 ${index + 1} 手 · ${when}${hand.favorite ? " ⭐" : ""}`);
 			lines.push("");
-			lines.push(`- 位置：${hand.position || "未知"} · 人数：${hand.players} · 盲注：${hand.blinds}`);
-			lines.push(`- 手牌：${(hand.holeCards || []).map(cardTextMd).join(" ")}`);
-			lines.push(`- 公共牌：${hand.board && hand.board.length ? hand.board.map(cardTextMd).join(" ") : "未发"}`);
-			const actionText = (hand.actions || []).map((item) => `${item.phase} ${item.action}${item.amount ? " " + item.amount : ""}（赔率 ${item.potOdds}%）`).join(" → ");
-			lines.push(`- 行动：${actionText || "无记录"}`);
-			lines.push(`- 结果：${hand.won ? "盈利" : "亏损"} ${hand.netBB} bb · 底池 ${hand.pot}`);
-			lines.push(`- 标记：VPIP=${hand.vpip} PFR=${hand.pfr} 看翻牌=${hand.sawFlop} 摊牌=${hand.wentShowdown} All-in=${hand.allIn}`);
-			if (hand.favorite) lines.push("- ⭐ 已收藏（重点分析）");
+			lines.push(`- 位置：${hand.position || "未知"} · ${hand.players || 0} 人桌 · 盲注 ${hand.blinds || "未知"}`);
+			if (hand.stacks && hand.stacks.length) lines.push(`- 起始筹码：${hand.stacks.join(" · ")}`);
+			lines.push(`- 我的手牌：${cardsText(hand.holeCards)}`);
+			PHASE_ORDER.forEach((phase) => {
+				if (!groups[phase] || !groups[phase].length) return;
+				const boardNow = phase !== "preflop" ? ` [${cardsText(boardForPhase(phase, hand.actions, hand.board))}]` : "";
+				lines.push(`- ${PHASE_LABEL[phase]}${boardNow}：${actionLine(groups[phase])}`);
+			});
+			lines.push(`- 底池：${hand.pot || 0}${hand.potWon ? ` · 我赢得 ${hand.potWon}` : ""}`);
+			const resultLine = hand.result || (hand.folded ? "我弃牌" : (hand.won ? "我赢下底池" : "我输掉底池"));
+			lines.push(`- 结果：${resultLine}`);
+			if (hand.shownCards && hand.shownCards.length) {
+				lines.push(`- 亮牌：${hand.shownCards.map((entry) => `${entry.name} ${cardsText(entry.holeCards)}`).join(" · ")}`);
+			}
+			lines.push(`- 标记：VPIP=${hand.vpip} PFR=${hand.pfr} 看翻牌=${hand.sawFlop} 摊牌=${hand.wentShowdown} All-in=${hand.allIn} 弃牌=${hand.folded}`);
 			lines.push("");
 		});
 		return lines.join("\n");
@@ -182,6 +239,21 @@
 		$("#export-out").classList.remove("hidden");
 		$("#export-text").value = text;
 		$("#export-info").textContent = info;
+	}
+
+	function copyText(text) {
+		try {
+			const area = document.createElement("textarea");
+			area.value = text;
+			area.style.position = "fixed";
+			area.style.opacity = "0";
+			document.body.appendChild(area);
+			area.select();
+			area.setSelectionRange(0, text.length);
+			const ok = document.execCommand("copy");
+			document.body.removeChild(area);
+			if (!ok && navigator.clipboard) navigator.clipboard.writeText(text);
+		} catch (error) { /* ignore */ }
 	}
 
 	function wire() {
@@ -237,7 +309,8 @@
 				"1. 按漏洞影响大小排序，最多指出 5 个问题。",
 				"2. 每个问题给出至少 2 手证据牌局。",
 				"3. 针对 -EV 跟注，用底池赔率说明应该弃牌的理由。",
-				"4. 输出下一阶段训练计划，包含 3 个可量化目标。",
+				"4. 指出对手的下注模式以及我漏掉的读牌信息。",
+				"5. 输出下一阶段训练计划，包含 3 个可量化目标。",
 				"",
 				"下面是我粘贴的牌局数据："
 			].join("\n");
@@ -255,21 +328,6 @@
 			renderHands();
 			$("#export-out").classList.add("hidden");
 		});
-	}
-
-	function copyText(text) {
-		try {
-			const area = document.createElement("textarea");
-			area.value = text;
-			area.style.position = "fixed";
-			area.style.opacity = "0";
-			document.body.appendChild(area);
-			area.select();
-			area.setSelectionRange(0, text.length);
-			const ok = document.execCommand("copy");
-			document.body.removeChild(area);
-			if (!ok && navigator.clipboard) navigator.clipboard.writeText(text);
-		} catch (error) { /* ignore */ }
 	}
 
 	wire();
