@@ -76,8 +76,11 @@ function getLivePlayerWinnerReactionState(player, now = Date.now()) {
 }
 
 function shouldForceShowdownHoleCards(player, gameState) {
+	// Mucking rule: only players who actually won a pot must show their cards.
+	// Everyone else keeps them hidden, so this must not force-reveal the table.
 	return getCurrentPhase(gameState?.currentPhaseIndex) === "showdown" &&
 		player.folded !== true &&
+		player.isWinner === true &&
 		player.holeCards.every(Boolean);
 }
 
@@ -99,10 +102,12 @@ function shouldShowTableWinProbability(player, gameState) {
 }
 
 function shouldShowSeatHandStrength(player, communityCards, gameState) {
+	// Never leak hand strength for a player whose cards are face down.
 	return gameState.currentPhaseIndex > 0 &&
 		communityCards.length >= 3 &&
 		!player.folded &&
-		player.holeCards.every(Boolean);
+		player.holeCards.every(Boolean) &&
+		areTableHoleCardsVisible(player, gameState);
 }
 
 function shouldShowSeatWinProbability(player, gameState) {
@@ -110,6 +115,7 @@ function shouldShowSeatWinProbability(player, gameState) {
 		gameState.currentPhaseIndex > 0 &&
 		!player.folded &&
 		player.holeCards.every(Boolean) &&
+		areTableHoleCardsVisible(player, gameState) &&
 		typeof player.winProbability === "number";
 }
 
