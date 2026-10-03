@@ -54,7 +54,18 @@ async function copyStatic() {
 	}
 }
 
-async function rewriteHtml(file) {
+/* Short content hash so every deploy gets a fresh URL (browsers cache classic
+   scripts aggressively once the version query is missing). */
+async function contentHash(fileName) {
+	const buffer = await readFile(path.join(dist, fileName));
+	let hash = 0;
+	for (let index = 0; index < buffer.length; index += 1) {
+		hash = (hash * 31 + buffer[index]) >>> 0;
+	}
+	return hash.toString(36).slice(0, 8);
+}
+
+async function rewriteHtml(file, stamps) {
 	const filePath = path.join(dist, file);
 	let html;
 	try {
@@ -72,15 +83,28 @@ async function rewriteHtml(file) {
 		);
 	}
 
-	// Bundles are plain classic scripts now: drop type="module" and cache-busting queries.
+	// Bundles are plain classic scripts now: drop type="module" and stamp them
+	// with a content hash so a deploy can never serve a stale bundle.
 	html = html.replace(
 		/<script([^>]*?)src="\.\/js\/(app|inlineAdvisor|advisorPage|careerStore|careerPage|singleView|remoteTable)\.js[^"]*"([^>]*)><\/script>/g,
 		(_match, before, name, after) => {
 			const cleanedBefore = before.replace(/\s*type="module"/, "").replace(/\s*defer/, "");
 			const cleanedAfter = after.replace(/\s*defer/, "");
-			return `<script${cleanedBefore}src="./js/${name}.js"${cleanedAfter}></script>`;
+			const stamp = stamps.scripts[name] || "0";
+			return `<script${cleanedBefore}src="./js/${name}.js?v=${stamp}"${cleanedAfter}></script>`;
 		},
 	);
+
+	if (html.indexOf("compat-polyfills.js") !== -1) {
+		const stamp = stamps.scripts.polyfills || "0";
+		html = html.replace(/src="\.\/js\/compat-polyfills\.js[^"]*"/, `src="./js/compat-polyfills.js?v=${stamp}"`);
+	}
+
+	// Same treatment for stylesheets.
+	html = html.replace(/href="(\.\/)?(css\/[a-z-]+\.css)(\?[^"]*)?"/g, (_match, prefix, file2) => {
+		const stamp = stamps.styles[file2.replace("css/", "")] || "0";
+		return `href="${prefix || ""}${file2}?v=${stamp}"`;
+	});
 
 	await writeFile(filePath, html);
 }
@@ -112,11 +136,10 @@ async function main() {
 	});
 
 	await copyStatic();
-	for (const file of ["index.html", "hole-cards.html", "remoteTable.html", "advisor.html", "career.html"]) {
-		await rewriteHtml(file);
-	}
+
 	// Safari 13 can mis-parse `?.5` style ternaries; insert a space so the
 	// output never contains the optional-chaining token sequence at all.
+	// Must run before hashing so the stamps match the shipped bytes.
 	for (const name of Object.keys(entries)) {
 		const filePath = path.join(dist, "js", `${name}.js`);
 		let code;
@@ -129,7 +152,25 @@ async function main() {
 		await writeFile(filePath, code.replace(/\?\.(\d)/g, "? .$1"));
 	}
 
+	const stamps = { scripts: {}, styles: {} };
+	for (const name of Object.keys(entries)) {
+		stamps.scripts[name] = await contentHash(`js/${name}.js`);
+	}
+	stamps.scripts.polyfills = await contentHash("js/compat-polyfills.js");
+	for (const style of ["style.css", "career.css", "advisor.css"]) {
+		try {
+			stamps.styles[style] = await contentHash(`css/${style}`);
+		} catch (error) {
+			if (error.code !== "ENOENT") throw error;
+		}
+	}
+
+	for (const file of ["index.html", "hole-cards.html", "remoteTable.html", "advisor.html", "career.html"]) {
+		await rewriteHtml(file, stamps);
+	}
+
 	console.log("Feltwise iOS13 build complete -> dist/");
+	console.log("asset stamps:", JSON.stringify(stamps));
 }
 
 main().catch((error) => {
