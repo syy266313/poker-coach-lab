@@ -2752,7 +2752,9 @@ Turn Handling And Betting Round Flow
 
 function notifyPlayerAction(player, action = "", amount = 0, actionMeta = {}) {
 	recordPlayerActionStats(gameState, player, action, actionMeta);
-	if (!player.isBot && action) {
+	// Record every seat's action so exported hands are a complete hand history
+	// (an AI reviewer needs the opponents' line, not only the human's).
+	if (action) {
 		const callCost = Math.max(0, gameState.currentBet - player.roundBet);
 		gameState.actionHistory.push({
 			phase: getCurrentPhase(gameState.currentPhaseIndex),
@@ -2761,10 +2763,13 @@ function notifyPlayerAction(player, action = "", amount = 0, actionMeta = {}) {
 			needToCall: callCost,
 			potOdds: callCost / Math.max(1, gameState.pot + callCost),
 			board: gameState.communityCards.slice(),
-			isHuman: true,
+			pot: gameState.pot,
+			playerName: player.name,
+			seatIndex: player.seatIndex,
+			isHuman: !player.isBot,
 			handId: gameState.handId,
 		});
-		if (gameState.actionHistory.length > 120) gameState.actionHistory.shift();
+		if (gameState.actionHistory.length > 400) gameState.actionHistory.shift();
 	}
 
 	const msg = getPlayerActionNotificationText(player.name, action, amount);
@@ -3275,6 +3280,25 @@ function doShowdown() {
 		totalPot,
 	} = showdownResult;
 	const commitPlan = createShowdownCommitPlan(gameState, showdownResult);
+	// Stash the authoritative result so the career/export layer records exact
+	// winners, pot amounts and shown hands instead of guessing from chip deltas.
+	globalThis.__feltwiseLastShowdown = {
+		handId: gameState.handId,
+		hadShowdown,
+		totalPot,
+		board: communityCards.slice(),
+		potResults: potResults.map((result) => ({
+			players: result.players.slice(),
+			amount: result.amount,
+			hand: result.hand || "",
+		})),
+		mainPotWinners: mainPotWinners.map((player) => player.name),
+		winningPlayers: winningPlayers.map((player) => player.name),
+		shownCards: activePlayers
+			.filter((player) => winningPlayers.indexOf(player) !== -1)
+			.map((player) => ({ name: player.name, holeCards: player.holeCards.slice(0, 2) })),
+		uncontestedWinner: uncontestedWinner ? uncontestedWinner.name : null,
+	};
 	logSpeedmodeEvent("hand_result", {
 		handId: gameState.handId,
 		communityCards: communityCards.slice(),
