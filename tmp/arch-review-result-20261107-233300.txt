@@ -1,0 +1,20 @@
+# Architecture Review Result
+
+时间：2026-11-07 23:33 Asia/Shanghai
+任务：修复移动端牌桌姓名遮挡筹码问题。
+状态：通过。
+
+## 结果
+- 根因是移动端座位固定高度与姓名/筹码内部内容高度不匹配，并叠加姓名行高过大、间距不足。
+- 已将座位高度改为自适应，姓名徽标改为 border-box、降低行高，筹码上间距改为 5px。
+- 390x844 移动 WebKit 长中文姓名验收通过：姓名底部 y=75.5，筹码顶部 y=80.5，无重叠；文字按省略号裁剪。
+- dist 已由构建脚本重建，style.css asset stamp 为 f034jp。
+
+## 测试
+- deno check：通过。
+- Career/IndexedDB 相关测试：25 passed, 0 failed。
+- 未修改 js/gameEngine.js、js/bot.js、tools/。
+
+## 遗留边界
+- 真实 iPhone 需要在部署后强制刷新，确认 CDN/浏览器没有继续使用旧 CSS。
+- 项目目录无 Git 元数据，无法提供 git diff。

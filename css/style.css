@@ -1419,7 +1419,7 @@ footer { position:relative; z-index:4; height:62px; flex:0 0 62px; }
   main { height:calc(100dvh - 48px); min-height:0; }
   main::before { width:122%; height:48%; top:51%; border-width:7px; }
   main::after { width:106%; height:39%; top:51%; }
-  main > .seat { width:31vw; max-width:122px; height:108px; }
+  main > .seat { width:31vw; max-width:122px; height:auto; }
   main > .seat:nth-of-type(1) { top:5%; left:2%; }
   main > .seat:nth-of-type(2) { top:3%; left:50%; }
   main > .seat:nth-of-type(3) { top:5%; right:2%; }
@@ -1561,14 +1561,20 @@ main > .seat:nth-of-type(5)[data-rotation="0"] { transform: translateX(-50%); }
 main > .seat .hole-cards { height: clamp(38px, 10.4vw, 56px); }
 main > .seat .hole-cards img.card { width: clamp(27px, 7.3vw, 40px); height: auto; margin: 0; }
 main > .seat h3 {
+    display: block;
+    box-sizing: border-box;
     height: clamp(20px, 5.6vw, 27px);
     min-height: 0;
     margin: 2px 0 0;
     padding: 1px 4px;
     border-radius: 8px;
     font-size: clamp(0.56rem, 2.5vw, 0.72rem);
+    line-height: 1.45;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
 }
-main > .seat .chips { height: clamp(18px, 5vw, 24px); gap: 3px; }
+main > .seat .chips { height: clamp(18px, 5vw, 24px); margin-top: 5px; gap: 3px; }
 main > .seat .chips .stack-visual { display: none; }
 main > .seat .chips :where(.total, .bet) { font-size: clamp(0.56rem, 2.5vw, 0.72rem); min-width: 0; }
 

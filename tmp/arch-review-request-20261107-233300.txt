@@ -1,0 +1,30 @@
+# Architecture Review Request
+
+时间：2026-11-07 23:33 Asia/Shanghai
+任务：修复移动端牌桌姓名遮挡筹码问题，不扩大功能范围。
+
+## 审计
+- 用户反馈此前姓名仍遮挡筹码。
+- 原有后置移动端规则将 `main > .seat` 固定为 `height: 108px`，内部内容包含牌面、姓名和筹码，容易在窄屏/长姓名下发生布局溢出。
+- 姓名徽标同时受多组样式覆盖，移动端后置规则未明确 `box-sizing`，且行高为 `1.7`；筹码区与姓名仅保留 3px 上间距。
+- 未修改 `js/gameEngine.js`、`js/bot.js`、`tools/`。
+
+## 实施
+仅修改 `css/style.css`：
+- 移动端 `main > .seat` 从固定 `height:108px` 改为 `height:auto`。
+- 移动端姓名徽标增加 `box-sizing:border-box`。
+- 姓名行高由 `1.7` 调整为 `1.45`。
+- 筹码区 `margin-top` 从 `3px` 调整为 `5px`。
+- 运行 `node tools/build.mjs` 更新 `dist/`，style.css asset stamp 为 `f034jp`。
+
+## 验证
+- `deno check js/app.js js/careerPage.js`：通过。
+- `deno test js/careerContract.test.js js/handId.test.js`：25 passed, 0 failed。
+- 390x844 移动 WebKit 页面启动一手牌并注入长中文姓名：座位 `81.9x88.9px`，姓名区域 `y=53.7..75.5`，筹码区域 `y=80.5..100.0`，约 5px 间隔，无重叠。
+- 长姓名保持 `overflow:hidden`、`white-space:nowrap`、`text-overflow:ellipsis`。
+- 截图确认顶部和底部座位的姓名、筹码均分离；长姓名被裁剪，不侵入筹码。
+- `css/style.css` 与 `dist/css/style.css` 内容尺寸一致，构建产物引用 `css/style.css?v=f034jp`。
+
+## 环境边界
+- 当前验收为 Minis 移动 WebKit 390x844；真实 iPhone 仍应刷新部署后的页面确认 CDN/浏览器缓存已更新。
+- 线上发布后如仍看到旧样式，使用强制刷新或清除该站点缓存；不能用旧缓存页面判断本修复是否生效。

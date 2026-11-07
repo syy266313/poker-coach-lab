@@ -1,0 +1,24 @@
+# Architecture Review Request
+
+时间：2026-11-07 22:05 Asia/Shanghai
+任务：在不扩大功能范围的前提下，验收 Career 复盘页面、IndexedDB 异常路径与最新 dist；确认真实 iPhone/iOS 13 验收边界。
+
+## 范围与约束
+- 只做只读审查、现有测试/浏览器/构建验收和记录更新，不改应用功能源码。
+- 禁止修改 `js/gameEngine.js`、`js/bot.js`、`tools/`；本轮未对其写入。
+- 按用户要求先读取 `agents.md`、`poker-task/SKILL.md`，核对 `task-log.md` 和最近审查结果 `tmp/arch-review-result-20261107-214817.txt`。
+- 项目目录无 `.git`，无法用 Git diff 证明文件改动集合；构建命令为 `node tools/build.mjs`，结果仅报告生成/更新 `dist/`。
+
+## 验收执行与结果
+1. 当前物理设备由 `apple-device info` 报告为 iPhone、iOS 18.7.5；浏览器页 UA 标示 iPhone OS 18.0 / Mobile Safari 18。环境不具备 iOS 13 设备/模拟器，故不能声称完成真实 iOS 13 Safari 验收。
+2. 最新 `dist/career.html` 在 Minis 移动 WebKit 页面打开：页面资源加载为 `dist/js/careerPage.js?v=uv905q`，Career 数据页初始 0 状态、战绩页空记录态正常；插入一条本地模拟复盘后，显示手牌、牌桌/公共牌、底池、盈亏、行动及赔率信息。
+3. 浏览器页面用恶意玩家名、result、warning、shownCards 数据验证：输入仅作为实体文本呈现，hand-list 内无 `img` / `svg` / `script` 元素。JSON 与 Markdown 导出内容保留 `amount=1190`、`needToCall=1190`、`potOdds=0.229` 和 `potAfter=5190` 对应数据；模拟数据移除后页面回到空状态。
+4. 浏览器页面内对 `dist/js/shared/handId.js` 执行 IndexedDB 模拟故障：API 不可用、open error、blocked、transaction abort 均返回 `coordinated:false` 和 fallback ID；成功路径返回 coordinated ID，versionchange handler 被安装并关闭连接。
+5. `deno check js/careerPage.js js/careerContract.test.js js/handId.test.js js/gameEngine.test.js js/bot.test.js` 通过。
+6. `deno test js/careerContract.test.js js/handId.test.js js/gameEngine.test.js js/bot.test.js`：80 passed，0 failed。
+7. `node tools/build.mjs` 成功，输出 iOS13 build complete -> dist；Career JS 资产戳 `uv905q`，career.css 资产戳 `1q0614p`。
+
+## 审查结论
+- 当前 Career、IDB 可执行异常路径与最新 dist 验收通过；没有发现需要扩展功能或改源码的问题。
+- 真正 iOS 13 Safari 13 设备验收仍未完成，须在可用的 iOS 13 真机上验证触控、视觉和真实 WebKit/IndexedDB 行为后才能关闭该设备侧遗留。
+- 用户请求的环境边界已如实记录；本轮不将浏览器模拟结果等同真实 iOS 13 验收。
